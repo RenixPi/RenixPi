@@ -1,0 +1,51 @@
+---
+- name: RenixPi Configuration
+  hosts: renixlocal
+  tasks:
+    - name: upload renix clone key
+      copy:
+        src: ~/.ssh/renix.pem
+        dest: ~/.ssh/id_rsa
+        owner: pi
+        group: pi
+        mode: 0400
+    - name: ensure github.com is a known host
+      lineinfile:
+        dest: ~/.ssh/known_hosts
+        create: yes
+        state: present
+        line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+        regexp: "^github\\.com"
+    - name: git
+      git:
+        repo: 'git@github.com:RenixECU/{{ item }}.git'
+        dest: '~/{{ item }}'
+        update: no
+      loop:
+        - "RenixDisplay"
+        - "RenixMonitor"
+    - name: "Add nodejs apt key"
+      apt_key:
+        url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+        state: present
+      become: yes
+
+    - name: "Add nodejs 13.x ppa for apt repo"
+      apt_repository:
+        repo: deb https://deb.nodesource.com/node_14.x bionic main
+      become: yes
+
+    - name: update apt cache
+      apt:
+        update_cache: yes
+      become: yes
+
+    - name: install dependencies
+      apt:
+        name: nodejs
+        state: present
+      loop:
+        - nodejs
+        - mosquitto
+        - mosquitto-clients
+      become: yes

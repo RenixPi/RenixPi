@@ -1,0 +1,27 @@
+---
+- name: RaspberryPi Configuration
+  hosts: raspilocal
+  tasks:
+    - name: provide ssh key login
+      authorized_key: 
+        user: "pi" 
+        key: "{{ lookup('file', '~/.ssh/renix.pub') }}"
+        state: present
+    - name: change sshd configuration
+      lineinfile:
+        path: "/etc/ssh/sshd_config"
+        regex: "{{ item.regex }}"
+        line: "{{ item.replace }}"
+      loop:
+        - { regex: '^(# *)?ChallengeResponseAuthentication', replace: 'ChallengeResponseAuthentication no'}
+        - { regex: '^(# *)?PasswordAuthentication', replace: 'PasswordAuthentication no' }
+        - { regex: '^(# *)?UsePAM', replace: 'UsePAM no' }
+        - { regex: '^(# *)?PermitRootLogin', replace: 'PermitRootLogin no' }
+        - { regex: '^(# *)?PermitRootLogin', replace: 'PermitRootLogin prohibit-password' }
+      become: yes
+    - name: change hostname
+      command: "raspi-config nonint do_hostname renix"
+      become: yes
+    - name: reboot
+      command: "reboot"
+      become: yes
