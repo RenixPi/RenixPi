@@ -5,6 +5,8 @@ the [RaspberryPi Imager](https://www.raspberrypi.org/software/).
 
 Insert into RaspberryPi and power on.
 
+> TODO : create config and automate build using https://github.com/RPi-Distro/pi-gen
+
 ![](<docs/renixpi.png>)
 
 # Renix History
@@ -38,10 +40,10 @@ Renix, however, did not; they used a proprietary format.
 
 While some commercially available diagnostic tools were made for mechanics, the protocol was never published. In 2012,
 a video by [Phil Andrews of the RenixPower forum](https://www.youtube.com/watch?v=AUqQrLLVdZ8) demonstrated his
-hard work in decoding the protocol. Following that, [Nick Grisley of NickInTimeDesign](nickintimedesign.com) started developing
+hard work in decoding the protocol. Following that, [Nick Grisley of NickInTimeDesign](http://nickintimedesign.com) started developing
 an open-source [Renix Engine Monitor](https://nickintimedesign.com/product/renix-engine-monitor-ii/) in 2016.
 
-This project is an extension of their **tremendous efforts** and would not be possible without them.
+This project is an extension of their *tremendous efforts* and would not be possible without them.
 
 ## Sources
 
@@ -50,22 +52,26 @@ This project is an extension of their **tremendous efforts** and would not be po
 - [OBD Wikipedia](https://en.wikipedia.org/wiki/On-board_diagnostics)
 - [Origins by NickInTimeDesign](https://nickintimedesign.com/where-it-all-began/)
 
-
 # Electronics
 
-The ECU serial data connection is a fairly standard interface (open-collector to ground) which isn't dependeent on the voltage of the connected electronics. Parts that are needed
+The ECU serial data connection is a fairly standard interface (open-collector to ground)
+which isn't dependent on the voltage of the connected electronics. Parts that are needed
 
-- transistor (eg 2N2309)
-- resistors (eg 4 x 1K ohm)
-- power supply (see notes)
-- diagnostic connector
+- raspberry pi ~$35
+- display (minimum 480x320 resolution) $20
+- transistor (eg 2N2309) < $1
+- resistors (eg 4 x 1K ohm) < $1
+- power supply (see notes)  ~$4
+- diagnostic connector ~$5
 - wire
+
+![](<docs/schematic.png>)
 
 
 ## ECU Diagnostic Connector
 
 The diagnostic connector in the vehicle is a standard 15-pin Molex connector; receptacle with female 0.093" pins. To connect, you'll
-need the [plug](<docs/molex-connector.jpeg>) (top right) with [male pins](<docs/molex-pins.jpeg>) (bottom left).
+need the [plug](<docs/molex-plug.jpeg>) (top right) with [male pins](<docs/molex-pin.jpeg>) (bottom left).
 
 ![](<docs/molex.jpeg>)
 
@@ -74,19 +80,23 @@ need the [plug](<docs/molex-connector.jpeg>) (top right) with [male pins](<docs/
 Two power sources are needed : 5V for the RaspberryPi and a Vdd of 3.3V to
 power the UART connection.
 
-Option 1 : The simplest power supply the RaspberryPi is to plug it into a usb
+Option 1: Use Vdd from the power pins of the Raspberry Pi and level shift
+the UART using a zener diode (1N4619) and a 100 ohm resistor.
+
+![](<docs/schematic-levelshift.png>)
+
+Option 2 : Amazon or Ebay (among others) have dc-to-dc step down converters based on the
+LM2596 and cost about $12 for a pack of 6. One should be adjusted to 5V and the other
+to 3.3V.
+
+Option 3 : The simplest power supply the RaspberryPi is to plug it into a usb
 charging port (5V) from a cigarette lighter adapter supplying at least 2A.
 There is no 3.3V supply output on the Pi but the RenixPi has a GPIO pin configured
 as an output that is  always high to provide a supply. A little clumsy but it works.
 
-If you haven't already invested in replacing the cigarette lighter with a
+( If you haven't already invested in replacing the cigarette lighter with a
 panel mount usb charging socket; it's an easy upgrade ($10). Note : XJ/MJs have an 
-always on cigarette lighter so make sure the socket has a switch.
-
-Option 2 : If you plan on hiding the wires behind the dash, it is worth 
-investing in two dc-to-sc step down converters. Amazon or Ebay has ones based on the
-LM2596 and cost about $12 for a pack of 6. One should be adjusted to 5V and the other
-to 3.3V.
+always on cigarette lighter so make sure the socket has a switch. )
 
 # Configuration
 
@@ -96,7 +106,7 @@ No configuration necessary.
 
 ### Wireless
 
-Remove the SD Card and connect so it shows up as an external drive. In the base directory, rename `wpa_supplicant.txt` to `wpa_supplicant.conf` and change the SSID and wifi password.
+In the base directory of the SD card, rename `wpa_supplicant.txt` to `wpa_supplicant.conf` and change the SSID and wifi password.
 
 ### SSH
 
@@ -104,20 +114,22 @@ Remove the SD Card and connect so it shows up as an external drive. In the base 
 
 `ssh pi@renix.local`
 
-### RenixPi
-
-#### Display
+### Display
 
 - size
 - orientation
 
 > TODO
 
-#### Engine Type
+### Engine Type
 
 Currently, only 4L M/T is supported.
 
-*(If anyone is interested in support for  the 2.5L or A/T or ABS, add an github issue and I'm happy to add it!)*
+*If anyone is interested in support for the 2.5L or A/T or ABS, add an github issue and I'm happy to add it!*
+
+> TODO
+
+#### UART
 
 > TODO
 
