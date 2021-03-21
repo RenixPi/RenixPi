@@ -12,3 +12,7 @@
 >>> # run electron app on raspberry pi
 >>> export DISPLAY=:0
 >>> npm run prod
+
+
+>> # rotate screen
+>> DISPLAY=:0 xrandr --output HDMI-1 --rotate left
