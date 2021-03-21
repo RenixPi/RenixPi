@@ -20,9 +20,10 @@ acquired more than 50% of the company by 1982. The company turned focus to its J
 of other models; the Wagoneer and Cherokee -- launched in 1983 -- created an entirely new sports utility vehicle
 class of cars.
 
-Initially, these vehicles had a carbureted 2.5L AMC engine or a GM-made 2.8L V6. In 1987, Jeep and Renault
-designed an inline, 6-cylinder engine. Drawing from another Renault joint venture with aerospace company Bendix,
-they outfitted this engine with an electronic fuel injection system. Renault-Bendix was shortened to Renix.
+Initially, these vehicles had a 2.5L inline-4 AMC engine or a GM-made 2.8L V6, both naturally aspirated with
+a carburetor. In 1987, Jeep and Renault designed an inline, 6-cylinder engine. Drawing from another Renault joint
+venture with aerospace company Bendix, they outfitted both the 2.5L and 4L engine with an electronic fuel injection
+system. Renault-Bendix was shortened to Renix.
 
 When Chysler acquired Jeep in 1991, they replaced the engine management system with their own ECU. However, 
 during just those four years of production, Jeep sold a combined *1.1 million* Wagoneers, 
@@ -125,7 +126,7 @@ In the base directory of the SD card, rename `wpa_supplicant.txt` to `wpa_suppli
 
 Currently, only 4L M/T is supported.
 
-*If anyone is interested in support for the 2.5L or A/T or ABS, add an github issue and I'm happy to add it!*
+*Like to see this implemented? Request with a github issue!*
 
 > TODO
 
@@ -215,9 +216,9 @@ The UART-based serial protocol used by the Renix
 
 ## A/T Transmission Protocol
 
-Like to see this implemented? Request with a github issue!
+*Like to see this implemented? Request with a github issue!*
 
 ## ABS Protocol
 
-List to see this implemented? Request with a github issue!
+*Like to see this implemented? Request with a github issue!*
 
