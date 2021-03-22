@@ -20,10 +20,10 @@
         repo: deb https://deb.nodesource.com/node_14.x bionic main
       become: yes
 
-    - name: update apt cache
-      apt:
-        update_cache: yes
-      become: yes
+#    - name: update apt cache
+#      apt:
+#        update_cache: yes
+#      become: yes
 
     - name: install dependencies
       apt:
@@ -55,3 +55,13 @@
       loop:
         - "RenixDisplay"
         - "RenixMonitor"
+    - name: install RenixDisplay dependencies
+      npm:
+        path: /home/pi/RenixDisplay
+    - name: install RenixMonitor dependencies
+      pip:
+        requirements: /home/pi/RenixMonitor/requirements.txt
+        virtualenv: /home/pi/RenixMonitor/.venv
+        virtualenv_command: python3 -m venv
+
+

@@ -1,0 +1,18 @@
+
+
+# a toml file
+
+[display]
+width = 320
+height = 480
+
+[broker]
+username = ""
+password = ""
+
+[renix]
+uart = ""
+baudrate = ""
+engine = "4L"     # options : 4L or 2.5L
+transmission = "MT"   # options: MT or AT
+abs = false
