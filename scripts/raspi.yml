@@ -22,6 +22,10 @@
     - name: change hostname
       command: "raspi-config nonint do_hostname renix"
       become: yes
+    - name: remove piwiz
+      apt:
+        state: absent
+        name: "piwiz"
     - name: reboot
       command: "reboot"
       become: yes

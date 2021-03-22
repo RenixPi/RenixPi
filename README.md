@@ -171,6 +171,13 @@ Currently, only 4L M/T is supported.
 >> DISPLAY=:0 xrandr --output HDMI-1 --rotate left
 ```
 
+```
+>> # turn on display that's sleeping
+>> DISPLAY=:0 xset s on s 60
+>> DISPLAY=:0 xset s activate
+
+```
+
 references: 
 https://reelyactive.github.io/diy/pi-kiosk/
 

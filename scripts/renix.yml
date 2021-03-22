@@ -35,8 +35,6 @@
         - mosquitto
         - mosquitto-clients
         - software-properties-common
-        - xserver-xorg
-        - xinit
         - chromium-browser
         - matchbox-window-manager
         - xautomation
