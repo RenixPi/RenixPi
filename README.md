@@ -99,6 +99,21 @@ as an output that is  always high to provide a supply. A little clumsy but it wo
 panel mount usb charging socket; it's an easy upgrade ($10). Note : XJ/MJs have an 
 always on cigarette lighter so make sure the socket has a switch. )
 
+# Software
+
+![](<docs/renixpi-arch.png>)
+
+## RenixMonitor
+
+Decodes serial data stream from Renix ECU. Python. Supports both python3 and micropython.
+
+https://github.com/RenixPi/RenixMonitor
+
+## RenixDisplay
+
+Electron app built with React, Redux and RxJS. Javascript. Display 
+
+
 # Configuration
 
 ### Ethernet
