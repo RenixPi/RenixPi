@@ -18,7 +18,7 @@ Japanese imports were now being produced domestically in highly efficient assemb
 Not able to secure loans from traditional sources, Renault provided funding to keep AMC going and eventually
 acquired more than 50% of the company by 1982. The company turned focus to its Jeep brand with down-sized versions
 of other models; the Wagoneer and Cherokee -- launched in 1983 -- created an entirely new sports utility vehicle
-class of cars.
+class of cars.  
 
 Initially, these vehicles had a 2.5L inline-4 AMC engine or a GM-made 2.8L V6, both naturally aspirated with
 a carburetor. In 1987, Jeep and Renault designed an inline, 6-cylinder engine. Drawing from another Renault joint
