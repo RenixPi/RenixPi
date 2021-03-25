@@ -92,6 +92,21 @@ through the GPIO header, it might be possible to get the right voltage by config
 and setting it to '1'. The max current is only 17 mA but, in theory, that should be enough
 to activate the 2N2309 transistor.
 
+# Software
+
+![](<docs/renixpi-arch.png>)
+
+## RenixMonitor
+
+Decodes serial data stream from Renix ECU. Python. Supports both python3 and micropython.
+
+https://github.com/RenixPi/RenixMonitor
+
+## RenixDisplay
+
+Electron app built with React, Redux and RxJS. Javascript. Display 
+
+
 # Configuration
 
 ### Ethernet
