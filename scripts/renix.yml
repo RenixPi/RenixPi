@@ -1,14 +1,7 @@
 ---
 - name: RenixPi Configuration
-  hosts: renixlocal
+  hosts: localhost
   tasks:
-    - name: upload renix clone key
-      copy:
-        src: ~/.ssh/renix.pem
-        dest: ~/.ssh/id_rsa
-        owner: pi
-        group: pi
-        mode: 0400
     - name: "Add nodejs apt key"
       apt_key:
         url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
@@ -19,11 +12,6 @@
       apt_repository:
         repo: deb https://deb.nodesource.com/node_14.x bionic main
       become: yes
-
-#    - name: update apt cache
-#      apt:
-#        update_cache: yes
-#      become: yes
 
     - name: install dependencies
       apt:
@@ -49,7 +37,7 @@
         regexp: "^github\\.com"
     - name: git
       git:
-        repo: 'git@github.com:RenixECU/{{ item }}.git'
+        repo: 'https://github.com/RenixPi/{{ item }}.git'
         dest: '~/{{ item }}'
         update: no
       loop:

@@ -1,7 +1,7 @@
 # Getting Started
 
 > TODO
-> Download the `.img` and create SD Card using  the [RaspberryPi Imager](https://www.raspberrypi.org/software/).
+> Create an `.img` that be used to create SD Card with the [RaspberryPi Imager](https://www.raspberrypi.org/software/).
 
 ![](<docs/renixpi.png>)
 
@@ -42,7 +42,7 @@ an open-source [Renix Engine Monitor](https://nickintimedesign.com/product/renix
 
 This project is an extension of their *tremendous efforts* and would not be possible without them.
 
-## Sources
+### Sources
 
 - [Automotive History Preservation Society](http://wildaboutcarsonline.com/cgi-bin/pub9990262549620.cgi?itemid=9990287331811&action=viewad&categoryid=9990279027328&page=1&placeonpage=6&totaldisplayed=50)
 - [Renix Wikipedia](https://en.wikipedia.org/wiki/Renix)
@@ -96,6 +96,23 @@ to activate the 2N2309 transistor.
 
 ![](<docs/renixpi-arch.png>)
 
+## Install
+
+Assumes that you are using a RaspberryPI Desktop OS image that already has `git` and `python3` installed. From either a 
+terminal window or command prompt via ssh:
+
+1. clone [RenixPi](https://github.com/RenixPi/RenixPi.git)
+1. install `ansible` with `pip3 install ansible`
+1. `cd RenixPi/config` and run `ansible-playbook renix.yml` which will clone 
+   [RenixMonitor](https://github.com/RenixPi/RenixMonitor.git) and [RenixDisplay](https://github.com/RenixPi/RenixDisplay.git)
+   along with installing their dependencies.
+1. `cd RenixMonitor`
+1. `python3 main.py --baudrate 62500 --interface /dev/ttyAMA1 &`
+1. `cd ../RenixDisplay`
+1. `npm run prod` (or `npm run build` followed by `npm run launch`)
+
+Note: on the RaspberryPi 4, there are more than two uarts so you may need to adjust the interface depending on your configuration. 
+
 ## RenixMonitor
 
 Decodes serial data stream from Renix ECU. Python. Supports both python3 and micropython.
@@ -104,8 +121,10 @@ https://github.com/RenixPi/RenixMonitor
 
 ## RenixDisplay
 
-Electron app built with React, Redux and RxJS. Javascript. Display 
+Electron app built with React, Redux and RxJS. Javascript. Displays information coming from RenixMonitor and any other
+MQTT source.
 
+https://github.com/RenixPi/RenixDisplay
 
 # Configuration
 
