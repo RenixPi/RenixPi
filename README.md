@@ -1,11 +1,7 @@
 # Getting Started
 
-[Download]() the `.img` and use etcher to create [RenixPi image]() on SD Card using
-the [RaspberryPi Imager](https://www.raspberrypi.org/software/).
-
-Insert into RaspberryPi and power on.
-
-> TODO : create config and automate build using https://github.com/RPi-Distro/pi-gen
+> TODO
+> Download the `.img` and create SD Card using  the [RaspberryPi Imager](https://www.raspberrypi.org/software/).
 
 ![](<docs/renixpi.png>)
 
@@ -59,7 +55,7 @@ The ECU serial data connection is a fairly standard interface (open-collector to
 which isn't dependent on the voltage of the connected electronics. Parts that are needed
 
 - raspberry pi ~$35
-- display (minimum 480x320 resolution) $20
+- display (minimum 480x320 resolution) ~$20
 - transistor (eg 2N2309) < $1
 - resistors (eg 4 x 1K ohm) < $1
 - power supply (see notes)  ~$4
@@ -78,26 +74,23 @@ need the [plug](<docs/molex-plug.jpeg>) (top right) with [male pins](<docs/molex
 
 ## Power supply
 
-Two power sources are needed : 5V for the RaspberryPi and a Vdd of 3.3V to
-power the UART connection.
+The RaspberryPi requires a 5V supply but its input pins are limited to 3.3V so the UART connection
+needs this lower Vdd pull-up voltage.
 
-Option 1: Use Vdd from the power pins of the Raspberry Pi and level shift
+**Option 1** Use Vdd from the power pins of the Raspberry Pi and level shift
 the UART using a zener diode (1N4619) and a 100 ohm resistor.
 
 ![](<docs/schematic-levelshift.png>)
 
-Option 2 : Amazon or Ebay (among others) have dc-to-dc step down converters based on the
+**Option 2** Amazon or Ebay (among others) have dc-to-dc step down converters based on the
 LM2596 and cost about $12 for a pack of 6. One should be adjusted to 5V and the other
 to 3.3V.
 
-Option 3 : The simplest power supply the RaspberryPi is to plug it into a usb
-charging port (5V) from a cigarette lighter adapter supplying at least 2A.
-There is no 3.3V supply output on the Pi but the RenixPi has a GPIO pin configured
-as an output that is  always high to provide a supply. A little clumsy but it works.
-
-( If you haven't already invested in replacing the cigarette lighter with a
-panel mount usb charging socket; it's an easy upgrade ($10). Note : XJ/MJs have an 
-always on cigarette lighter so make sure the socket has a switch. )
+**Option 3** The RaspberryPi can be powered by a USB charging port (5V) from a cigarette lighter
+adapter supplying at least 2A. While the 3.3V regulator on the RaspberryPi isn't easily accessible
+through the GPIO header, it might be possible to get the right voltage by configuring an output pin
+and setting it to '1'. The max current is only 17 mA but, in theory, that should be enough
+to activate the 2N2309 transistor.
 
 # Configuration
 
