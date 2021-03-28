@@ -27,20 +27,24 @@ Cherokees (XJ) and Comanches (MJ) with the Renix system.
 
 ## Engine management protocols
 
-While the On Board Diagnostic (OBD) standard was established by [SAE in 1979](https://www.sae.org/standards/content/j1979_201202/),
-most car companies only partially implemented this protocol until 1994 when California emission regulations mandated its inclusion
-in all vehicles.
+While the On Board Diagnostic (OBD) protocol was established by [SAE in 1979](https://www.sae.org/standards/content/j1979_201202/),
+it wasn't until 1994, when California emissions regulations mandated it be included on all vehicles, that it became the
+industry standard now known as OBD-II.
 
-Renix, however, did not; they used a proprietary format.
+Between 1979 and 1994, most companies used some portion of the OBD standard. Renix did not, charting their
+own path with a proprietary format.
 
 ## Reverse engineering of the Renix protocol
 
-While some commercially available diagnostic tools were made for mechanics, the protocol was never published. In 2012,
-a video by [Phil Andrews of the RenixPower forum](https://www.youtube.com/watch?v=AUqQrLLVdZ8) demonstrated his
-hard work in decoding the protocol. Following that, [Nick Grisley of NickInTimeDesign](http://nickintimedesign.com) started developing
-an open-source [Renix Engine Monitor](https://nickintimedesign.com/product/renix-engine-monitor-ii/) in 2016.
+While some commercially available diagnostic tools were made for mechanics, the protocol was never published. In 2012, a video by
+[Phil Andrews of the RenixPower forum](https://www.youtube.com/watch?v=AUqQrLLVdZ8) demonstrated his hard work in decoding the protocol.
 
-This project is an extension of their *tremendous efforts* and would not be possible without them.
+Following that, [Nick Grisley of NickInTimeDesign](http://nickintimedesign.com) started developing the
+[Renix Engine Monitor](https://nickintimedesign.com/product/renix-engine-monitor-ii/) in 2016 and has been generous to
+share the source code as an open source project. There are several videos on his website that show the extensive sleuthing
+that was needed to arrive in his latest iteration. I've purchased one and I've been very impressed, it works great!
+
+This project is an extension of both Phil and Nick's *tremendous* efforts and would not have been possible without them.
 
 ### Sources
 
