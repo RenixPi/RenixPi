@@ -51,6 +51,7 @@
         requirements: /home/pi/RenixMonitor/requirements.txt
         virtualenv: /home/pi/RenixMonitor/.venv
         virtualenv_command: python3 -m venv
+    - name: configure mosquitto for external source
 
 
 
@@ -108,3 +109,11 @@
 #If you changed the configuration file:
 #
 #  sudo supervisorctl reread
+
+
+
+# screen resolution
+# cvt 1024 600 60
+# xrandr --newmode <line from above>
+# xrandr --addmode HDMI-n <mode from above>
+# xrandr -s 1680x1050

@@ -7,6 +7,11 @@
         user: "pi" 
         key: "{{ lookup('file', '~/.ssh/renix.pub') }}"
         state: present
+    - name: upload deploy key
+      copy:
+        src: "~/.ssh/renix.pem"
+        dest: "/home/pi/.ssh/id_rsa"
+        mode: 400
     - name: change sshd configuration
       lineinfile:
         path: "/etc/ssh/sshd_config"
@@ -26,6 +31,15 @@
       apt:
         state: absent
         name: "piwiz"
+      become: yes
+    - name: add packages
+      apt:
+        name: "{{item}}"
+        state: present
+      loop:
+        - git
+        - python3-venv
+      become: yes
     - name: reboot
       command: "reboot"
       become: yes

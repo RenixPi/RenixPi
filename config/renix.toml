@@ -1,5 +1,3 @@
-
-
 # a toml file
 
 [display]
@@ -16,3 +14,9 @@ baudrate = ""
 engine = "4L"     # options : 4L or 2.5L
 transmission = "MT"   # options: MT or AT
 abs = false
+
+[tpms]
+lf = "340a250e"
+rf = "4C6C4C"
+lr = "id3"
+rr = "id4"
