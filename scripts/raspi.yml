@@ -25,7 +25,7 @@
         - { regex: '^(# *)?PermitRootLogin', replace: 'PermitRootLogin prohibit-password' }
       become: yes
     - name: change hostname
-      command: "raspi-config nonint do_hostname renix"
+      command: "raspi-config nonint do_hostname {{ hostname }}"
       become: yes
     - name: remove piwiz
       apt:
@@ -40,6 +40,11 @@
         - git
         - python3-venv
       become: yes
+    - name: git
+      git:
+        repo: 'https://github.com/RenixPi/RenixPi.git'
+        dest: '~/RenixPi'
+      update: no
     - name: reboot
       command: "reboot"
       become: yes

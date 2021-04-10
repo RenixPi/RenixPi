@@ -16,7 +16,7 @@ transmission = "MT"   # options: MT or AT
 abs = false
 
 [tpms]
-lf = "340a250e"
+lf = "298271a9"
 rf = "4C6C4C"
-lr = "id3"
-rr = "id4"
+lr = "f89c0b45"
+rr = "d290027d"

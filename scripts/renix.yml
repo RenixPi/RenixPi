@@ -18,12 +18,9 @@
         name: "{{ item }}"
         state: present
       loop:
-        - nodejs
-        - git
         - mosquitto
         - mosquitto-clients
         - software-properties-common
-        - chromium-browser
         - matchbox-window-manager
         - xautomation
         - unclutter
@@ -51,8 +48,35 @@
         requirements: /home/pi/RenixMonitor/requirements.txt
         virtualenv: /home/pi/RenixMonitor/.venv
         virtualenv_command: python3 -m venv
-    - name: configure mosquitto for external source
-
+    - name: rtl 433 dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - libtool
+        - libusb-1.0-0-dev
+        - librtlsdr-dev
+        - rtl-sdr
+        - build-essential
+        - autoconf
+        - cmake
+        - pkg-config
+    - name: rtl 433 git clone
+      git:
+        repo: 'https://github.com/merbanan/rtl_433.git'
+        update: no
+    - name: create build dir
+      file:
+        path: "~/rtl_433/build"
+        state: directory
+    - name: run rtl433 cmake
+      ansible.builtin.shell:
+        cmd: "{{ item }}"
+        chdir: "~/rtl_433/build"
+      loop:
+        - "cmake .."
+        - "make"
+        - "make install"
 
 
 

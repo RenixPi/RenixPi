@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - /Users/amirsky/dev/RenixPi/config/grafana.ini:/etc/grafana/grafana.ini
+      - renixdata:/var/lib/grafana
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - /Users/amirsky/dev/RenixPi/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - renixdata:/prometheus
+volumes:
+  renixdata:
+
+    
