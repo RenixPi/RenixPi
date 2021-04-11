@@ -44,7 +44,7 @@
       git:
         repo: 'https://github.com/RenixPi/RenixPi.git'
         dest: '~/RenixPi'
-      update: no
+        update: no
     - name: reboot
       command: "reboot"
       become: yes

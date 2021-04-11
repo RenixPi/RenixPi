@@ -1,18 +1,9 @@
 ---
 - name: RenixPi Configuration
   hosts: localhost
+  roles:
+    - common
   tasks:
-    - name: "Add nodejs apt key"
-      apt_key:
-        url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
-        state: present
-      become: yes
-
-    - name: "Add nodejs 13.x ppa for apt repo"
-      apt_repository:
-        repo: deb https://deb.nodesource.com/node_14.x bionic main
-      become: yes
-
     - name: install dependencies
       apt:
         name: "{{ item }}"
@@ -78,61 +69,6 @@
         - "make"
         - "make install"
 
-
-
-
-
-#  cd ~
-#  sudo apt-get install git git-core cmake libusb-1.0-0-dev
-#  build-essential
-#  git clone git://git.osmocom.org/rtl-sdr.git
-#  cd rtl-sdr/ && mkdir build && cd build/
-#  cmake ../ -DINSTALL_UDEV_RULES=ON
-#  sudo make
-#  sudo make install
-#  sudo ldconfig
-#  cd ~
-#  sudo cp ./rtl-sdr/rtl-sdr.rules /etc/udev/rules.d/
-#  sudo reboot
-#  # create file no-rtl.conf
-#
-#  sudo nano /etc/modprobe.d/no-rtl.conf
-#  # add these three lines
-#
-#  blacklist dvb_usb_rtl28xxu
-#  blacklist rtl2832
-#  blacklist rtl2830
-#
-#  sudo reboot
-#  lsusb
-#  rtl_test -t
-#  Build and install rtl_433
-#  sudo apt-get install libtool libusb-1.0.0-dev librtlsdr-dev
-#  rtl-sdr doxygen
-#  git clone https://github.com/merbanan/rtl_433.git
-#  cd rtl_433/ && mkdir build &&
-#  cd build && cmake ../ &&
-#  make
-#  sudo make install
-#  sudo apt-get install -y supervisor
-#  sudo nano /etc/supervisor/conf.d/rtl_433.conf
-#Enter into file:
-#
-#  [program:rtl_433]
-#  command=/home/pi/rtl_433/build/src/rtl_433 -R 123 -F “mqtt://localhost:1883,,user=”admin”,pass=”admin”,events=BEER”user=pi
-#  autostart=yes
-#  autorestart=yes
-#  startretries=100
-#  stderr_logfile=/var/log/rtl_433/rtl_433.err.log
-#  stdout_logfile=/var/log/rtl_433/rtl_433.log
-#
-#  sudo mkdir /var/log/rtl_433
-#  sudo service supervisor start
-#
-#  sudo service supervisor status
-#If you changed the configuration file:
-#
-#  sudo supervisorctl reread
 
 
 

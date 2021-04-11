@@ -22,3 +22,22 @@
     state: present
     line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
     regexp: "^github\\.com"
+- name: disable screensaver
+  lineinfile:
+    path: "/etc/xdg/lxsession/LXDE-pi/autostart"
+    line: "{{ item }}"
+  loop:
+    - '@xset -dpms'
+    - '@xset s off'
+- name: boot changes
+  lineinfile:
+    path: "/boot/config.txt"
+    line: "{{ item }}"
+  loop:
+    - 'dtparam=pwr_led_trigger=none'
+    - 'dtparam=pwr_led_activelow=off'
+    - 'disable_splash=1'
+    - 'boot_delay=0'
+    - 'initial_turbo=30'
+    - 'start_cd=1'
+    - '#dtoverlay=sdtweak,overclock_50=10'
