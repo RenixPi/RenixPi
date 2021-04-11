@@ -4,6 +4,23 @@
   roles:
     - common
   tasks:
+    - name: rotate screen
+      lineinfile:
+        path: "/etc/xdg/lxsession/LXDE-pi/autostart"
+        line: "@xrandr --output HDMI-1 --rotate right"
+    - name: rotate input
+      #  -> libinput touchscreen catchall
+      # 90° = Option "TransformationMatrix" "0 -1 1 1 0 0 0 0 1"
+      # 180° = Option "TransformationMatrix" "-1 0 1 0 -1 1 0 0 1"
+      # 270° = Option "TransformationMatrix" "0 1 0 -1 0 1 0 0 1"
+      lineinfile:
+        path: "/usr/share/X11/xorg.conf.d/40-libinput.conf"
+        line: '     Option "TransformationMatrix" "0 -1 1 1 0 0 0 0 1"'
+    - name: "Add grafana apt key"
+      apt_key:
+        url: https://packages.grafana.com/gpg.key
+        state: present
+      become: yes
     - name: "Add grafana repo"
       apt_repository:
         repo: deb https://packages.grafana.com/oss/deb stable main
@@ -21,13 +38,6 @@
         - unclutter
         - grafana
       become: yes
-    - name: ensure github.com is a known host
-      lineinfile:
-        dest: ~/.ssh/known_hosts
-        create: yes
-        state: present
-        line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
-        regexp: "^github\\.com"
     - name: git
       git:
         repo: 'https://github.com/RenixPi/{{ item }}.git'
@@ -57,6 +67,7 @@
         - autoconf
         - cmake
         - pkg-config
+      become: yes
     - name: rtl 433 git clone
       git:
         repo: 'https://github.com/merbanan/rtl_433.git'
@@ -80,6 +91,13 @@
       loop:
         - { 'src': 'grafana.ini.j2', 'dest': '/etc/grafana.ini' }
 
+# /usr/share/X11/xorg.conf.d/40-libinput.conf -> libinput touchscreen catchall
+# 90° = Option "TransformationMatrix" "0 -1 1 1 0 0 0 0 1"
+# 180° = Option "TransformationMatrix" "-1 0 1 0 -1 1 0 0 1"
+# 270° = Option "TransformationMatrix" "0 1 0 -1 0 1 0 0 1"
+
+# /etc/xdg/lxsession/LXDE-pi/autostart ->
+# @xrandr --output HDMI-1 --rotate right
 
 # screen resolution
 # cvt 1024 600 60

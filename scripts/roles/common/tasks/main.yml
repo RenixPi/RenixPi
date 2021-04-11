@@ -8,13 +8,14 @@
   apt_repository:
     repo: deb https://deb.nodesource.com/node_14.x bionic main
   become: yes
-- name: install dependencies
+- name: install common dependencies
   apt:
     name: "{{ item }}"
     state: present
   loop:
     - nodejs
     - git
+  become: yes
 - name: ensure github.com is a known host
   lineinfile:
     dest: ~/.ssh/known_hosts
@@ -41,3 +42,16 @@
     - 'initial_turbo=30'
     - 'start_cd=1'
     - '#dtoverlay=sdtweak,overclock_50=10'
+
+
+# disable_overscan=1
+
+# screen config -> /usr/share/dispsetup.sh
+
+# gtf 600 480 60
+# xrandr --newmode "600x480_60.00"  22.19  600 616 672 744  480 481 484 497  -HSync +Vsyn
+# xrandr --addmode HDMI-1 "600x480_60.00"
+
+
+
+
