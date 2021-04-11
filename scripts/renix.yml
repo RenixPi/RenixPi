@@ -4,6 +4,10 @@
   roles:
     - common
   tasks:
+    - name: "Add grafana repo"
+      apt_repository:
+        repo: deb https://packages.grafana.com/oss/deb stable main
+      become: yes
     - name: install dependencies
       apt:
         name: "{{ item }}"
@@ -15,6 +19,7 @@
         - matchbox-window-manager
         - xautomation
         - unclutter
+        - grafana
       become: yes
     - name: ensure github.com is a known host
       lineinfile:
@@ -68,8 +73,12 @@
         - "cmake .."
         - "make"
         - "make install"
-
-
+    - name:
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      loop:
+        - { 'src': 'grafana.ini.j2', 'dest': '/etc/grafana.ini' }
 
 
 # screen resolution

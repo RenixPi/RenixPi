@@ -45,6 +45,9 @@
         repo: 'https://github.com/RenixPi/RenixPi.git'
         dest: '~/RenixPi'
         update: no
+    - name: ansible install
+      pip:
+        name: ansible
     - name: reboot
       command: "reboot"
       become: yes
