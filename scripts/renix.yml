@@ -17,14 +17,14 @@
       lineinfile:
         path: "/usr/share/X11/xorg.conf.d/40-libinput.conf"
         insertafter: ".*?libinput touchscreen catchall"
-        line: '     Option "TransformationMatrix" "0 -1 1 1 0 0 0 0 1"'
+        line: '        Option "TransformationMatrix" "0 -1 1 1 0 0 0 0 1"'
       become: yes
     - name: disable overscan
       lineinfile:
         path: "/etc/ssh/sshd_config"
         regex: "^(# *)disable_overscan"
         line: "disable_overscan=1"
-
+      become: yes
     - name: "Add grafana apt key"
       apt_key:
         url: https://packages.grafana.com/gpg.key
