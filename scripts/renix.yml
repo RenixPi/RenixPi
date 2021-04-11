@@ -8,6 +8,7 @@
       lineinfile:
         path: "/etc/xdg/lxsession/LXDE-pi/autostart"
         line: "@xrandr --output HDMI-1 --rotate right"
+      become: yes
     - name: rotate input
       #  -> libinput touchscreen catchall
       # 90° = Option "TransformationMatrix" "0 -1 1 1 0 0 0 0 1"
@@ -15,7 +16,9 @@
       # 270° = Option "TransformationMatrix" "0 1 0 -1 0 1 0 0 1"
       lineinfile:
         path: "/usr/share/X11/xorg.conf.d/40-libinput.conf"
+        insertafter: ".*?libinput touchscreen catchall"
         line: '     Option "TransformationMatrix" "0 -1 1 1 0 0 0 0 1"'
+      become: yes
     - name: disable overscan
       lineinfile:
         path: "/etc/ssh/sshd_config"

@@ -30,6 +30,7 @@
   loop:
     - '@xset -dpms'
     - '@xset s off'
+  become: yes
 - name: boot changes
   lineinfile:
     path: "/boot/config.txt"
@@ -42,6 +43,7 @@
     - 'initial_turbo=30'
     - 'start_cd=1'
     - '#dtoverlay=sdtweak,overclock_50=10'
+  become: yes
 
 # screen config -> /usr/share/dispsetup.sh
 
