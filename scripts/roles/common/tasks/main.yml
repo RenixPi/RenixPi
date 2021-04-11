@@ -43,9 +43,6 @@
     - 'start_cd=1'
     - '#dtoverlay=sdtweak,overclock_50=10'
 
-
-# disable_overscan=1
-
 # screen config -> /usr/share/dispsetup.sh
 
 # gtf 600 480 60
