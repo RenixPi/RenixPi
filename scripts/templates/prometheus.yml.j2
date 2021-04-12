@@ -6,9 +6,9 @@ scrape_configs:
 
   - job_name: tpms
     static_configs:
-      - targets: ['host.docker.internal:8080']
+      - targets: ['localhost:8080']
 
   - job_name: ecu
     scrape_interval: 1s
     static_configs:
-      - targets: ['host.docker.internal:8081']
+      - targets: ['localhost:8081']
