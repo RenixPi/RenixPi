@@ -71,6 +71,7 @@
     - name: start prometheus
       systemd:
         state: start
+        enabled: yes
         daemon_reload: yes
         name: prometheus
     - name: install dependencies
@@ -138,6 +139,15 @@
       loop:
         - { 'src': 'renixmonitor.service.j2', 'dest': '/etc/systemd/system/renixmonitor.service' }
         - { 'src': 'tpmsmonitor.service.j2', 'dest': '/etc/systemd/system/tpmsmonitor.service' }
+#    - name: start monitoring services
+#      systemd:
+#        state: start
+#        enabled: yes
+#        daemon_reload: yes
+#        name: "{{ item }}"
+#      loop:
+#        - "renixmonitor"
+#        - "tpmsmonitor"
 
 # /usr/share/X11/xorg.conf.d/40-libinput.conf -> libinput touchscreen catchall
 # 90° = Option "TransformationMatrix" "0 -1 1 1 0 0 0 0 1"
