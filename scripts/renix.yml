@@ -60,21 +60,23 @@
       loop:
         - "consoles"
         - "console_libraries"
-    - name: prometheus config and service
+    - name: prometheus config
       template:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
+        src: "prometheus.yml.j2"
+        dest: "/etc/prometheus/prometheus.yml"
         owner: pi
         group: pi
-      loop:
-        - { 'src': 'prometheus.yml.j2', 'dest': '/etc/prometheus/prometheus.yml' }
-        - { 'src': 'prometheus.service.j2', 'dest': '/etc/systemd/system/prometheus.service' }
+    - name: prometheus service
+      template:
+        src: "prometheus.service.j2"
+        dest: "/etc/systemd/system/prometheus.service"
     - name: start prometheus
       systemd:
         state: start
         enabled: yes
         daemon_reload: yes
         name: prometheus
+      become: yes
     - name: install dependencies
       apt:
         name: "{{ item }}"
