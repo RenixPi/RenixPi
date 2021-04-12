@@ -29,11 +29,12 @@
       unarchive:
         src: https://github.com/prometheus/prometheus/releases/download/v2.26.0/prometheus-2.26.0.linux-armv7.tar.gz
         dest: /tmp/
+        remote_src: yes
     - name: create prometheus directories
       file:
         path: "{{ item }}"
         state: directory
-        user: pi
+        owner: pi
         group: pi
       loop:
         - "/etc/prometheus"
@@ -43,7 +44,7 @@
       copy:
         src: "/tmp/prometheus-2.26.0.linux-armv7/{{ item }}"
         dest: "/usr/local/bin"
-        user: pi
+        owner: pi
         group: pi
         mode: '0500'
       loop:
@@ -54,7 +55,7 @@
       copy:
         src: "/tmp/prometheus-2.26.0.linux-armv7/{{ item }}"
         dest: "/etc/prometheus"
-        user: pi
+        owner: pi
         group: pi
       loop:
         - "consoles"
@@ -63,7 +64,7 @@
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
-        user: pi
+        owner: pi
         group: pi
       loop:
         - { 'src': 'prometheus.yml.j2', 'dest': '/etc/prometheus/prometheus.yml' }
