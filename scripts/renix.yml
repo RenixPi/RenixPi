@@ -33,27 +33,38 @@
       file:
         path: "{{ item }}"
         state: directory
+        user: pi
+        group: pi
       loop:
         - "/etc/prometheus"
         - "/var/lib/prometheus"
+      become: yes
     - name: place the binaries
       copy:
-        - src: "/tmp/prometheus-2.26.0.linux-armv7/{{ item }}"
-        - dest: "/usr/local/bin"
+        src: "/tmp/prometheus-2.26.0.linux-armv7/{{ item }}"
+        dest: "/usr/local/bin"
+        user: pi
+        group: pi
+        mode: '0500'
       loop:
         - "prometheus"
         - "promtool"
+      become: yes
     - name: place the console files
       copy:
-        - src: "/tmp/prometheus-2.26.0.linux-armv7/{{ item }}"
-        - dest: "/etc/prometheus"
+        src: "/tmp/prometheus-2.26.0.linux-armv7/{{ item }}"
+        dest: "/etc/prometheus"
+        user: pi
+        group: pi
       loop:
         - "consoles"
         - "console_libraries"
-    - name:
+    - name: prometheus config and service
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
+        user: pi
+        group: pi
       loop:
         - { 'src': 'prometheus.yml.j2', 'dest': '/etc/prometheus/prometheus.yml' }
         - { 'src': 'prometheus.service.j2', 'dest': '/etc/systemd/system/prometheus.service' }
@@ -120,12 +131,13 @@
         - "cmake .."
         - "make"
         - "make install"
-#    - name:
-#      template:
-#        src: "{{ item.src }}"
-#        dest: "{{ item.dest }}"
-#      loop:
-#        - { 'src': 'grafana.ini.j2', 'dest': '/etc/grafana.ini' }
+    - name:
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      loop:
+        - { 'src': 'renixmonitor.service.j2', 'dest': '/etc/systemd/system/renixmonitor.service' }
+        - { 'src': 'tpmsmonitor.service.j2', 'dest': '/etc/systemd/system/tpmsmonitor.service' }
 
 # /usr/share/X11/xorg.conf.d/40-libinput.conf -> libinput touchscreen catchall
 # 90° = Option "TransformationMatrix" "0 -1 1 1 0 0 0 0 1"
