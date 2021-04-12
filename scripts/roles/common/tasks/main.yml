@@ -15,6 +15,7 @@
   loop:
     - nodejs
     - git
+    - unclutter
   become: yes
 - name: ensure github.com is a known host
   lineinfile:
@@ -23,13 +24,14 @@
     state: present
     line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
     regexp: "^github\\.com"
-- name: disable screensaver
+- name: disable screensaver, energysaver and mouse pointer
   lineinfile:
     path: "/etc/xdg/lxsession/LXDE-pi/autostart"
     line: "{{ item }}"
   loop:
     - '@xset -dpms'
     - '@xset s off'
+    - '@unclutter -idle 0'
   become: yes
 - name: boot changes
   lineinfile:

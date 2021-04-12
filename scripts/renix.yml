@@ -77,17 +77,13 @@
         daemon_reload: yes
         name: prometheus
       become: yes
-    - name: install dependencies
+    - name: install mosquitto
       apt:
         name: "{{ item }}"
         state: present
       loop:
         - mosquitto
         - mosquitto-clients
-        - software-properties-common
-        - matchbox-window-manager
-        - xautomation
-        - unclutter
       become: yes
     - name: git
       git:
@@ -134,7 +130,11 @@
       loop:
         - "cmake .."
         - "make"
-        - "make install"
+    - name: rtl433 install
+      shell:
+        cmd: "make install"
+        chdir: "~/rtl_433/build"
+      become: yes
     - name:
       template:
         src: "{{ item.src }}"
