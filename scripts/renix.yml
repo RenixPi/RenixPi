@@ -135,7 +135,7 @@
     - name: rtl433 install
       shell:
         cmd: "make install"
-        chdir: "~/rtl_433/build"
+        chdir: "/home/pi/rtl_433/build"
       become: yes
     - name:
       template:
