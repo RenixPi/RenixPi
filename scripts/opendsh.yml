@@ -19,6 +19,12 @@
         state: present
       loop:
         - grafana
+    - name: start monitoring services
+      systemd:
+        state: started
+        enabled: yes
+        daemon_reload: yes
+        name: "grafana-server"
     - name: clone analytics and opendsh
       git:
         repo: 'git@github.com:{{ item }}.git'

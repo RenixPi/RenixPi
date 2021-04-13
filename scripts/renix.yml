@@ -146,7 +146,7 @@
         - { 'src': 'tpmsmonitor.service.j2', 'dest': '/etc/systemd/system/tpmsmonitor.service' }
 #    - name: start monitoring services
 #      systemd:
-#        state: start
+#        state: started
 #        enabled: yes
 #        daemon_reload: yes
 #        name: "{{ item }}"
