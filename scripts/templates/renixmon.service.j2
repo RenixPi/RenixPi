@@ -3,7 +3,7 @@ Description=ECU Monitor
 After=network.target
 
 [Service]
-ExecStart=/home/pi/RenixMonitor/.venv/python /home/pi/RenixMonitor/ecu_monitor.py
+ExecStart=/home/pi/RenixMonitor/.venv/bin/python /home/pi/RenixMonitor/ecu_monitor.py -c /etc/toml
 WorkingDirectory=/home/pi/RenixMonitor
 StandardOutput=inherit
 StandardError=inherit
