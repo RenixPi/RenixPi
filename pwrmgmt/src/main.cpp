@@ -1,5 +1,7 @@
 #include <Arduino.h>
 
+#include <RenixPower.h>
+
 void setup() {
   // put your setup code here, to run once:
 }
