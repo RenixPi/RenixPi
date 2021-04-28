@@ -15,10 +15,6 @@
 
 RenixPowerClass::RenixPowerClass() {
 
-    isRenixRunning = false;
-    isOpenDshRunning = false;
-
-
     pinMode(ENABLE_RENIX_PWR_PIN, OUTPUT);
     pinMode(ENABLE_OPENDSH_PWR_PIN, OUTPUT);
 
@@ -46,7 +42,7 @@ void RenixPowerClass::enableOpenDshPower(bool enable) {
     digitalWrite(ENABLE_OPENDSH_PWR_PIN, LOW);
 }
 
-bool RenixPowerClass::checkRenixRunning(void) {
+bool RenixPowerClass::isRenixRunning() {
     int handshake;
 
     handshake = digitalRead(RENIX_RUNNING_PIN);
@@ -58,7 +54,7 @@ bool RenixPowerClass::checkRenixRunning(void) {
     return false;
 }
 
-bool RenixPowerClass::checkOpenDshRunning(void) {
+bool RenixPowerClass::isOpenDshRunning() {
     int handshake;
 
     handshake = digitalRead(OPENDSH_RUNNING_PIN);
@@ -70,7 +66,7 @@ bool RenixPowerClass::checkOpenDshRunning(void) {
     return false;
 }
 
-bool RenixPowerClass::checkRenixPower(void) {
+bool RenixPowerClass::isRenixPoweredOn(void) {
     float renix_current = 0.0;
 
     renix_current = RenixPowerClass::getRenixCurrent();
@@ -78,7 +74,7 @@ bool RenixPowerClass::checkRenixPower(void) {
     return renix_current > RENIX_MIN_CURRENT_DRAW;
 }
 
-bool RenixPowerClass::checkOpenDshPower(void) {
+bool RenixPowerClass::isOpenDshPoweredOn(void) {
     float opendsh_current = 0.0;
 
     opendsh_current = RenixPowerClass::getOpenDshCurrent();

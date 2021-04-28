@@ -15,21 +15,19 @@ class RenixPowerClass : public PCF8523 , public LowPowerClass {
         void enableRenixPower(bool enable);
         void enableOpenDshPower(bool enable);
 
-        bool checkRenixRunning(void);
-        bool checkOpenDshRunning(void);
+        bool isRenixRunning();
+        bool isOpenDshRunning();
 
-        bool checkRenixPower(void);
-        bool checkOpenDshPower(void);
+        bool isRenixPoweredOn();
+        bool isOpenDshPoweredOn();
 
-        bool shutdownRenix(void);
-        bool shutdownOpenDsh(void);
+        bool shutdownRenix();
+        bool shutdownOpenDsh();
 
         RenixPowerClass();
 
     private:
-        bool isRenixRunning;
-        bool isOpenDshRunning;
-
+    
         float getRenixCurrent(void);
         float getOpenDshCurrent(void);
 
