@@ -4,15 +4,6 @@
   roles:
     - common
   tasks:
-    - name: install dependencies
-      apt:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - software-properties-common
-        - xautomation
-        - unclutter
-      become: yes
     - name: "Add grafana apt key"
       apt_key:
         url: https://packages.grafana.com/gpg.key
@@ -22,7 +13,19 @@
       apt_repository:
         repo: deb https://packages.grafana.com/oss/deb stable main
       become: yes
-    - name: git
+    - name: install dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - grafana
+    - name: start monitoring services
+      systemd:
+        state: started
+        enabled: yes
+        daemon_reload: yes
+        name: "grafana-server"
+    - name: clone analytics and opendsh
       git:
         repo: 'git@github.com:{{ item }}.git'
         dest: '~/{{ item }}'
@@ -30,6 +33,7 @@
       loop:
         - "RenixPi/RenixAnalytics"
         - "OpenDsh/dash"
+      become: yes
     - name: install RenixAnalytics dependencies
       npm:
         path: /home/pi/RenixAnalytics

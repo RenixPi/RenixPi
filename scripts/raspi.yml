@@ -12,6 +12,10 @@
         src: "~/.ssh/renix.pem"
         dest: "/home/pi/.ssh/id_rsa"
         mode: 400
+    - name: upload ssh config
+      template:
+        src: "config.ssh.j2"
+        dest: "~/.ssh/config"
     - name: change sshd configuration
       lineinfile:
         path: "/etc/ssh/sshd_config"

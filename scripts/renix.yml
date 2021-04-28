@@ -135,7 +135,7 @@
     - name: rtl433 install
       shell:
         cmd: "make install"
-        chdir: "~/rtl_433/build"
+        chdir: "/home/pi/rtl_433/build"
       become: yes
     - name:
       template:
@@ -146,7 +146,7 @@
         - { 'src': 'tpmsmonitor.service.j2', 'dest': '/etc/systemd/system/tpmsmonitor.service' }
 #    - name: start monitoring services
 #      systemd:
-#        state: start
+#        state: started
 #        enabled: yes
 #        daemon_reload: yes
 #        name: "{{ item }}"
