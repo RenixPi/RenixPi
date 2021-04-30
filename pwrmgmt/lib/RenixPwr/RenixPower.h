@@ -21,8 +21,8 @@ class RenixPowerClass : public PCF8523 , public LowPowerClass {
         bool isRenixPoweredOn();
         bool isOpenDshPoweredOn();
 
-        bool shutdownRenix();
-        bool shutdownOpenDsh();
+        void shutdownRenix();
+        void shutdownOpenDsh();
 
         RenixPowerClass();
 
@@ -33,5 +33,6 @@ class RenixPowerClass : public PCF8523 , public LowPowerClass {
 
 };
 
+extern RenixPowerClass RenixPower;
 
 #endif  //RENIXPOWER_H
