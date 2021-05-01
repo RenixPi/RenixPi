@@ -1,36 +1,25 @@
 
-// State machine variables
-#define FLIP_LIGHT_SWITCH 1
-#include <SleepyPi2.h>
 #include <states.h>
 
-// Transition callback functions
-
-void on_trans_light_on_light_off()
-{
-  Serial.println("Transitioning from LIGHT_ON to LIGHT_OFF");
-}
-
-void on_trans_light_off_light_on()
-{
-  Serial.println("Transitioning from LIGHT_OFF to LIGHT_ON");
-}
-
-
-Fsm fsm(&state_light_off);
-
+#define HOLD_BEFORE_SHUTDOWN 2*60*1000
 
 // standard arduino functions
 void setup()
 {
   Serial.begin(9600);
 
-  fsm.add_transition(&state_light_on, &state_light_off,
-                     FLIP_LIGHT_SWITCH,
-                     &on_trans_light_on_light_off);
-  fsm.add_transition(&state_light_off, &state_light_on,
-                     FLIP_LIGHT_SWITCH,
-                     &on_trans_light_off_light_on);
+  power_fsm.add_transition(&pi_off, &pi_on, IGN_ON, NULL);
+
+  power_fsm.add_transition(&pi_on, &hold, IGN_OFF, NULL);
+
+  power_fsm.add_timed_transition(&hold, &start_shutdown, HOLD_BEFORE_SHUTDOWN, NULL);
+  power_fsm.add_transition(&hold, &pi_on, IGN_ON, NULL);
+  
+  power_fsm.add_timed_transition(&start_shutdown, &pi_off, 30*1000, NULL);
+  power_fsm.add_transition(&start_shutdown, &pi_not_running, NOT_RUNNING, NULL);
+  
+  power_fsm.add_transition(&pi_not_running, &pi_off, NOT_POWERED, NULL);
+
 }
 
 void loop()

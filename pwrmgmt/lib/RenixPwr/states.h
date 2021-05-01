@@ -2,33 +2,18 @@
 #define STATES_H
 
 #include <Fsm.h>
-#include <Arduino.h>
-
-// Transition callback functions
-void on_light_on_enter()
-{
-  Serial.println("Entering LIGHT_ON");
-}
-
-void on_light_on_exit()
-{
-  Serial.println("Exiting LIGHT_ON");
-}
-
-void on_light_off_enter()
-{
-  Serial.println("Entering LIGHT_OFF");
-}
-
-void on_light_off_exit()
-{
-  Serial.println("Exiting LIGHT_OFF");
-}
+#include "triggers.h"
+#include "transitions.h"
 
 
-State state_light_on(&on_light_on_enter, NULL, &on_light_on_exit);
-State state_light_off(&on_light_off_enter, NULL, &on_light_off_exit);
 
 
+State pi_off(&pi_off_actions, NULL, NULL);
+State pi_on(&pi_on_actions, NULL, NULL);
+State hold(NULL, NULL, NULL);
+State start_shutdown(NULL, NULL, NULL);
+State pi_not_running(NULL, NULL, NULL);
+
+Fsm power_fsm(&pi_off);
 
 #endif
