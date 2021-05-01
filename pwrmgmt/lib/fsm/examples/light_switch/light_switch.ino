@@ -1,10 +1,32 @@
+#include "Fsm.h"
 
 // State machine variables
 #define FLIP_LIGHT_SWITCH 1
-#include <SleepyPi2.h>
-#include <states.h>
+
+State state_light_on(on_light_on_enter, NULL, &on_light_on_exit);
+State state_light_off(on_light_off_enter, NULL, &on_light_off_exit);
+Fsm fsm(&state_light_off);
 
 // Transition callback functions
+void on_light_on_enter()
+{
+  Serial.println("Entering LIGHT_ON");
+}
+
+void on_light_on_exit()
+{
+  Serial.println("Exiting LIGHT_ON");
+}
+
+void on_light_off_enter()
+{
+  Serial.println("Entering LIGHT_OFF");
+}
+
+void on_light_off_exit()
+{
+  Serial.println("Exiting LIGHT_OFF");
+}
 
 void on_trans_light_on_light_off()
 {
@@ -15,10 +37,6 @@ void on_trans_light_off_light_on()
 {
   Serial.println("Transitioning from LIGHT_OFF to LIGHT_ON");
 }
-
-
-Fsm fsm(&state_light_off);
-
 
 // standard arduino functions
 void setup()
@@ -35,9 +53,9 @@ void setup()
 
 void loop()
 {
-  // fsm.run_machine();
-  // delay(2000);
-  // fsm.trigger(FLIP_LIGHT_SWITCH);
-  // delay(2000);
-  // fsm.trigger(FLIP_LIGHT_SWITCH);
+  // No "fsm.run_machine()" call needed as no "on_state" funcions or timmed transitions exists
+  delay(2000);
+  fsm.trigger(FLIP_LIGHT_SWITCH);
+  delay(2000);
+  fsm.trigger(FLIP_LIGHT_SWITCH);
 }

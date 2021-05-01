@@ -13,7 +13,7 @@
 #define RENIX_MIN_CURRENT_DRAW      100
 #define OPENDSH_MIN_CURRENT_DRAW    100
 
-RenixPowerClass::RenixPowerClass() {
+RenixPowerClass::RenixPowerClass(bool x) {
 
     pinMode(ENABLE_RENIX_PWR_PIN, OUTPUT);
     pinMode(ENABLE_OPENDSH_PWR_PIN, OUTPUT);
@@ -72,6 +72,6 @@ float RenixPowerClass::getOpenDshCurrent() {
 }
 
 
-RenixPowerClass RenixPower;
+RenixPowerClass RenixPower(true);
 
 

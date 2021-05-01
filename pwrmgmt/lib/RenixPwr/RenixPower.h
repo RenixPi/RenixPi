@@ -24,7 +24,7 @@ class RenixPowerClass : public PCF8523 , public LowPowerClass {
         void shutdownRenix();
         void shutdownOpenDsh();
 
-        RenixPowerClass();
+        RenixPowerClass(bool x);
 
     private:
     
