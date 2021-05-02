@@ -13,7 +13,7 @@
 #define RENIX_MIN_CURRENT_DRAW      100
 #define OPENDSH_MIN_CURRENT_DRAW    100
 
-RenixPowerClass::RenixPowerClass(bool x) {
+RenixPowerClass::RenixPowerClass() {
 
     pinMode(ENABLE_RENIX_PWR_PIN, OUTPUT);
     pinMode(ENABLE_OPENDSH_PWR_PIN, OUTPUT);
@@ -30,7 +30,7 @@ RenixPowerClass::RenixPowerClass(bool x) {
 }
 
 void RenixPowerClass::enableRenixPower(bool enable) {
-        digitalWrite(OPENDSH_SHUTDOWN_PIN, LOW);
+        digitalWrite(RENIX_SHUTDOWN_PIN, LOW);
         digitalWrite(ENABLE_RENIX_PWR_PIN, HIGH);
 }
 
@@ -59,7 +59,7 @@ bool RenixPowerClass::isOpenDshPoweredOn(void) {
     float opendsh_current = 0.0;
 
     opendsh_current = RenixPowerClass::getOpenDshCurrent();
-    Serial.print(opendsh_current);
+
     return opendsh_current > OPENDSH_MIN_CURRENT_DRAW;
 }
 
@@ -67,11 +67,16 @@ void RenixPowerClass::shutdownOpenDsh() {
     digitalWrite(OPENDSH_SHUTDOWN_PIN, HIGH);
 }
 
+void RenixPowerClass::shutdownRenix() {
+    digitalWrite(RENIX_SHUTDOWN_PIN, HIGH);
+}
+
+float RenixPowerClass::getRenixCurrent() {
+    return analogRead(I_RENIX_PIN);
+}
+
 float RenixPowerClass::getOpenDshCurrent() {
     return analogRead(I_OPENDSH_PIN);
 }
 
-
-RenixPowerClass RenixPower(true);
-
-
+RenixPowerClass RenixPower;
