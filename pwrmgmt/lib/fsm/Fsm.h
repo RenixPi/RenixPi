@@ -23,20 +23,22 @@
   #include <WProgram.h>
 #endif
 
+#include <SleepyPi2.h>
+#include <PiDevice.h>
 
 struct State
 {
-  State(void (*on_enter)(), void (*on_state)(), void (*on_exit)());
-  void (*on_enter)();
-  void (*on_state)();
-  void (*on_exit)();
+  State(void (*on_enter)(PiDevice* device), void (*on_state)(PiDevice* device), void (*on_exit)(PiDevice* device));
+  void (*on_enter)(PiDevice* device);
+  void (*on_state)(PiDevice* device);
+  void (*on_exit)(PiDevice* device);
 };
 
 
 class Fsm
 {
 public:
-  Fsm(State* initial_state);
+  Fsm(State* initial_state, PiDevice* device);
   ~Fsm();
 
   void add_transition(State* state_from, State* state_to, int event,
@@ -79,6 +81,7 @@ private:
   TimedTransition* m_timed_transitions;
   int m_num_timed_transitions;
   bool m_initialized;
+  PiDevice* m_device;
 };
 
 
