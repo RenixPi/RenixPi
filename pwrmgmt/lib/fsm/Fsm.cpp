@@ -15,14 +15,12 @@
 
 #include "Fsm.h"
 
-
 State::State(void (*on_enter)(PiDevice* device), void (*on_state)(PiDevice* device), void (*on_exit)(PiDevice* device))
 : on_enter(on_enter),
   on_state(on_state),
   on_exit(on_exit)
 {
 }
-
 
 Fsm::Fsm(State* initial_state, PiDevice* device)
 : m_current_state(initial_state),
@@ -41,7 +39,6 @@ Fsm::~Fsm()
   m_transitions = NULL;
   m_timed_transitions = NULL;
 }
-
 
 void Fsm::add_transition(State* state_from, State* state_to, int event,
                          void (*on_transition)())
