@@ -12,7 +12,7 @@ PiFSM::PiFSM(PiDevice* device)
     hold(NULL, NULL, NULL),
     start_shutdown(&start_shutdown__enter, NULL, NULL),
     pi_not_running(NULL, NULL, NULL),
-    Fsm(&pi_off, device)
+    Fsm<PiDevice>(&pi_off, device)
  {
   add_transition(&pi_off, &pi_on, TRIGGER__IGN_ON, NULL);
 

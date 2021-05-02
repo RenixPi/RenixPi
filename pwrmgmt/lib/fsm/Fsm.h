@@ -26,25 +26,28 @@
 #include <SleepyPi2.h>
 #include <PiDevice.h>
 
+template <class C>
+
 struct State
 {
-  State(void (*on_enter)(PiDevice* device), void (*on_state)(PiDevice* device), void (*on_exit)(PiDevice* device));
-  void (*on_enter)(PiDevice* device);
-  void (*on_state)(PiDevice* device);
-  void (*on_exit)(PiDevice* device);
+  State(void (*on_enter)(C*), void (*on_state)(C*), void (*on_exit)(C*));
+  void (*on_enter)(C*);
+  void (*on_state)(C*);
+  void (*on_exit)(C*);
 };
 
 
+template <class C>
 class Fsm
 {
 public:
-  Fsm(State* initial_state, PiDevice* device);
+  Fsm(State<C>* initial_state, C* device);
   ~Fsm();
 
-  void add_transition(State* state_from, State* state_to, int event,
+  void add_transition(State<C>* state_from, State<C>* state_to, int event,
                       void (*on_transition)());
 
-  void add_timed_transition(State* state_from, State* state_to,
+  void add_timed_transition(State<C>* state_from, State<C>* state_to,
                             unsigned long interval, void (*on_transition)());
 
   void check_timed_transitions();
@@ -55,8 +58,8 @@ public:
 private:
   struct Transition
   {
-    State* state_from;
-    State* state_to;
+    State<C>* state_from;
+    State<C>* state_to;
     int event;
     void (*on_transition)();
 
@@ -68,20 +71,20 @@ private:
     unsigned long interval;
   };
 
-  static Transition create_transition(State* state_from, State* state_to,
+  static Transition create_transition(State<C>* state_from, State<C>* state_to,
                                       int event, void (*on_transition)());
 
   void make_transition(Transition* transition);
 
 private:
-  State* m_current_state;
+  State<C>* m_current_state;
   Transition* m_transitions;
   int m_num_transitions;
 
   TimedTransition* m_timed_transitions;
   int m_num_timed_transitions;
   bool m_initialized;
-  PiDevice* m_device;
+  C* m_device;
 };
 
 

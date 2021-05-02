@@ -15,14 +15,16 @@
 
 #include "Fsm.h"
 
-State::State(void (*on_enter)(PiDevice* device), void (*on_state)(PiDevice* device), void (*on_exit)(PiDevice* device))
+template <class C>
+State<C>::State(void (*on_enter)(C* device), void (*on_state)(C* device), void (*on_exit)(C* device))
 : on_enter(on_enter),
   on_state(on_state),
   on_exit(on_exit)
 {
 }
 
-Fsm::Fsm(State* initial_state, PiDevice* device)
+template <class C>
+Fsm<C>::Fsm(State<C>* initial_state, C* device)
 : m_current_state(initial_state),
   m_transitions(NULL),
   m_num_transitions(0),
@@ -32,7 +34,8 @@ Fsm::Fsm(State* initial_state, PiDevice* device)
 {
 }
 
-Fsm::~Fsm()
+template <class C>
+Fsm<C>::~Fsm()
 {
   free(m_transitions);
   free(m_timed_transitions);
@@ -40,7 +43,8 @@ Fsm::~Fsm()
   m_timed_transitions = NULL;
 }
 
-void Fsm::add_transition(State* state_from, State* state_to, int event,
+template <class C>
+void Fsm<C>::add_transition(State<C>* state_from, State<C>* state_to, int event,
                          void (*on_transition)())
 {
   if (state_from == NULL || state_to == NULL)
@@ -54,8 +58,8 @@ void Fsm::add_transition(State* state_from, State* state_to, int event,
   m_num_transitions++;
 }
 
-
-void Fsm::add_timed_transition(State* state_from, State* state_to,
+template <class C>
+void Fsm<C>::add_timed_transition(State<C>* state_from, State<C>* state_to,
                                unsigned long interval, void (*on_transition)())
 {
   if (state_from == NULL || state_to == NULL)
@@ -75,8 +79,8 @@ void Fsm::add_timed_transition(State* state_from, State* state_to,
   m_num_timed_transitions++;
 }
 
-
-Fsm::Transition Fsm::create_transition(State* state_from, State* state_to,
+template <class C>
+typename Fsm<C>::Transition Fsm<C>::create_transition(State<C>* state_from, State<C>* state_to,
                                        int event, void (*on_transition)())
 {
   Transition t;
@@ -88,7 +92,8 @@ Fsm::Transition Fsm::create_transition(State* state_from, State* state_to,
   return t;
 }
 
-void Fsm::trigger(int event)
+template <class C>
+void Fsm<C>::trigger(int event)
 {
   if (m_initialized)
   {
@@ -105,7 +110,8 @@ void Fsm::trigger(int event)
   }
 }
 
-void Fsm::check_timed_transitions()
+template <class C>
+void Fsm<C>::check_timed_transitions()
 {
   for (int i = 0; i < m_num_timed_transitions; ++i)
   {
@@ -128,7 +134,8 @@ void Fsm::check_timed_transitions()
   }
 }
 
-void Fsm::run_machine()
+template <class C>
+void Fsm<C>::run_machine()
 {
   // first run must exec first state "on_enter"
   if (!m_initialized)
@@ -144,7 +151,8 @@ void Fsm::run_machine()
   Fsm::check_timed_transitions();
 }
 
-void Fsm::make_transition(Transition* transition)
+template <class C>
+void Fsm<C>::make_transition(Transition* transition)
 {
  
   // Execute the handlers in the correct order.
