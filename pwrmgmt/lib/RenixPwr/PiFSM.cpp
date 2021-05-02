@@ -6,13 +6,13 @@
 #define TIME__WAIT_BEFORE_SHUTDOWN (2*6*1000)
 #define TIME__WAIT_BEFORE_POWER_OFF (30*1000)
 
-PiFSM::PiFSM(State* state, PiDevice* device)
+PiFSM::PiFSM(PiDevice* device)
 :   pi_off(&pi_off__enter, NULL, NULL),
     pi_on(&pi_on__enter, NULL, NULL),
     hold(NULL, NULL, NULL),
     start_shutdown(&start_shutdown__enter, NULL, NULL),
     pi_not_running(NULL, NULL, NULL),
-    Fsm(state, device)
+    Fsm(&pi_off, device)
  {
   add_transition(&pi_off, &pi_on, TRIGGER__IGN_ON, NULL);
 

@@ -6,25 +6,21 @@
 
 void pi_off__enter(PiDevice* device) {
     // turn pi power off
-    RenixPower.enableRenixPower(false);
+    device->disablePower();
     RenixPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
-    Serial.println("powering down renix");
+    Serial.println(device->getName() + ": powering down, take a nap sleepypi");
 }
 
 void pi_on__enter(PiDevice* device) {
     // turn pi power on
-    RenixPower.enableRenixPower(true);
-    Serial.println("turning renix on");
+    device->enablePower();
+    Serial.println(device->getName() + " turning renix on");
 }
 
 void start_shutdown__enter(PiDevice* device) {
     //begin shutdown sequence
-    RenixPower.shutdownRenix();
-}
-
-void on_wakeup() {
-    // when sleepypi wakes from its nap
-    Serial.println("waking up");
+    device->shutdown();
+    Serial.println(device->getName() + " starting shutdown sequence");
 }
 
 #endif

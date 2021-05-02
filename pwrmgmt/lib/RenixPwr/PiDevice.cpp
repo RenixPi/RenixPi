@@ -2,7 +2,8 @@
 
 
 
-PiDevice::PiDevice(int pwr_pin, int shutdown_pin, int running_pin, int current_draw_pin) :
+PiDevice::PiDevice(String name, int pwr_pin, int shutdown_pin, int running_pin, int current_draw_pin) :
+m_name(name),
 m_pwr_pin(pwr_pin),
 m_shutdown_pin(shutdown_pin),
 m_running_pin(running_pin),
@@ -30,13 +31,13 @@ bool PiDevice::isRunning() {
 }
 
 bool PiDevice::isPoweredOn() {
-    return getCurrentDraw() > MIN_POWER_DRAW;
+    return analogRead(m_current_draw_pin) > MIN_POWER_DRAW;
 }
 
 void PiDevice::shutdown() {
     digitalWrite(m_shutdown_pin, HIGH);
 }
 
-float PiDevice::getCurrentDraw() {
-    return analogRead(m_current_draw_pin);
+String PiDevice::getName() {
+    return m_name;
 }

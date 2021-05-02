@@ -18,7 +18,7 @@
 class PiDevice : public LowPowerClass {
 
     public:
-        PiDevice(int pwr_pin, int shutdown_pin, int running_pin, int current_draw_pin);
+        PiDevice(String name, int pwr_pin, int shutdown_pin, int running_pin, int current_draw_pin);
 
         void enablePower();
         void disablePower();
@@ -26,13 +26,14 @@ class PiDevice : public LowPowerClass {
         bool isPoweredOn();
         void shutdown();
 
+        String getName();
+
     private:
         int m_pwr_pin;
         int m_shutdown_pin;
         int m_running_pin;
         int m_current_draw_pin;
-
-        float getCurrentDraw();
+        String m_name;
 
 };
 
