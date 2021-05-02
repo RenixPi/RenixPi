@@ -1,6 +1,6 @@
 
 #include <PinChangeInt.h>
-#include <RenixPower.h>
+
 #include <PiDevice.h>
 #include <PiFSM.h>
 #include <triggers.h>
@@ -31,22 +31,22 @@ void setup()
 void loop()
 {
 
+  // check timed transitions, execute any in-state callbacks
   renix_fsm.run_machine();
   opendsh_fsm.run_machine();
 
+  // if ignition is on, send trigger
   if(digitalRead(IGNITION_PIN) > 0) {
     renix_fsm.trigger(TRIGGER__IGN_ON);
     opendsh_fsm.trigger(TRIGGER__IGN_ON);
   }
 
-  if(!RenixPower.isRenixRunning()) {
-    renix_fsm.trigger(TRIGGER__NOT_RUNNING);
-    opendsh_fsm.trigger(TRIGGER__NOT_RUNNING);
-  }
+  // if pis are not running, send trigger
+  if(!renix.isRunning()) renix_fsm.trigger(TRIGGER__NOT_RUNNING);
+  if(!opendsh.isRunning()) opendsh_fsm.trigger(TRIGGER__NOT_RUNNING);
 
-  if(!RenixPower.isRenixPoweredOn()) {
-    renix_fsm.trigger(TRIGGER__NOT_POWERED);
-    opendsh_fsm.trigger(TRIGGER__NOT_POWERED);
-  }
+  // if pis are powered off, send trigger
+  if(!renix.isPoweredOn()) renix_fsm.trigger(TRIGGER__NOT_POWERED);
+  if(!opendsh.isPoweredOn()) opendsh_fsm.trigger(TRIGGER__NOT_POWERED);
 
 }
