@@ -3,23 +3,109 @@
 #define DEBUG
 
 #include <PiDevice.h>
-#include <PiFSM.h>
+#include <states.h>
+#include <transitions.h>
 #include <triggers.h>
 
-#define IGNITION_PIN 8
+#define TIME__WAIT_BEFORE_SHUTDOWN (6*1000)
+#define TIME__WAIT_BEFORE_POWER_OFF (30*1000)
 
-PiDevice renix("renix", RENIX_PWR_PIN, RENIX_SHUTDOWN_PIN, RENIX_RUNNING_PIN, RENIX_I_PIN);
-PiDevice opendsh("opendsh", OPENDSH_PWR_PIN, OPENDSH_SHUTDOWN_PIN, OPENDSH_RUNNING_PIN, OPENDSH_I_PIN);
+void initial__enter() {
+    Serial.println("initial state");
+}
+State initial(&initial__enter, NULL, NULL);
+Fsm powermgr(&initial);
 
-PiFSM renix_fsm(&renix);
-PiFSM opendsh_fsm(&opendsh);
+void pi_off__enter() {
+  Serial.println("shutting pis off");
+  RenixPi.disablePower();
+  OpenDshPi.disablePower();
+}
+
+void pi_off__actions() {
+    if(digitalRead(IGNITION_PIN) > 0) {
+      powermgr.trigger(TRIGGER__IGN_ON);
+    } else {
+      powermgr.trigger(TRIGGER__IGN_OFF);
+    }
+}
+
+void sleep__enter() {
+    Serial.println("taking a nap");
+    delay(500);
+    LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
+}
+
+void pi_on__enter() {
+    // turn pi power on
+    RenixPi.enablePower();
+    OpenDshPi.enablePower();
+    #ifdef DEBUG
+    Serial.println("turning on");
+    #endif
+}
+
+void hold__enter() {
+    #ifdef DEBUG
+    Serial.println("entering hold ");
+    #endif
+}
+
+void start_shutdown__enter() {
+    //begin shutdown sequence
+    RenixPi.shutdown();
+    OpenDshPi.shutdown();
+    #ifdef DEBUG
+    Serial.println("starting shutdown sequence");
+    #endif
+}
+
+void start_shutdown__actions() {
+  if(!RenixPi.isRunning() && !OpenDshPi.isRunning()) {
+    #ifdef DEBUG
+    Serial.println("both pis are not running");
+    #endif
+    powermgr.trigger(TRIGGER__NOT_RUNNING);
+  }
+}
+
+void not_running__enter() {
+  #ifdef DEBUG
+  Serial.println("not running");
+  #endif
+}
+
+void not_running__actions() {
+  if(!RenixPi.isPoweredOn() && !OpenDshPi.isPoweredOn()) {
+    #ifdef DEBUG
+    Serial.println("both pis are powered off");
+    #endif
+    powermgr.trigger(TRIGGER__NOT_POWERED);
+  }
+}
+
+void not_powered__enter() {
+  #ifdef DEBUG
+  Serial.println("not powered");
+  #endif
+}
 
 void on_wakeup() {
     // when sleepypi wakes from its nap
+    #ifdef DEBUG
     Serial.println("waking up");
+    #endif
 }
 
-// standard arduino functions
+State pi_off(&pi_off__enter, &pi_off__actions, NULL);
+State sleep(&sleep__enter, NULL, NULL);
+State pi_on(&pi_on__enter, NULL, NULL);
+State hold(&hold__enter, NULL, NULL);
+State start_shutdown(&start_shutdown__enter, &start_shutdown__actions, NULL);
+State not_running(&not_running__enter, &not_running__actions, NULL);
+State not_powered(&not_powered__enter, NULL, NULL);
+
+// initial configuration
 void setup()
 {
   Serial.begin(9600);
@@ -28,36 +114,48 @@ void setup()
   // use the ignition power to wake up the sleepypi
   pinMode(IGNITION_PIN, INPUT);
   PCintPort::attachInterrupt(IGNITION_PIN, &on_wakeup, RISING);
+
+  //state: initial
+  powermgr.add_timed_transition(&initial, &pi_off, 1, NULL);
+
+  //state: pi_off
+  powermgr.add_transition(&pi_off, &sleep, TRIGGER__IGN_OFF, NULL);
+  powermgr.add_transition(&pi_off, &pi_on, TRIGGER__IGN_ON, NULL);
+
+  //state: sleep
+  powermgr.add_transition(&sleep, &pi_on, TRIGGER__IGN_ON, NULL);
+
+  //state: pi_on
+  powermgr.add_transition(&pi_on, &hold, TRIGGER__IGN_OFF, NULL);
+
+  //state: hold
+  powermgr.add_timed_transition(&hold, &start_shutdown, TIME__WAIT_BEFORE_SHUTDOWN, NULL);
+  powermgr.add_transition(&hold, &pi_on, TRIGGER__IGN_ON, NULL);
+  
+  //state: start shutdown
+  powermgr.add_transition(&start_shutdown, &not_running, TRIGGER__NOT_RUNNING, NULL);
+  powermgr.add_timed_transition(&start_shutdown, &pi_off, TIME__WAIT_BEFORE_POWER_OFF, NULL);
+  
+  //state: not running
+  powermgr.add_transition(&not_running, &not_powered, TRIGGER__NOT_POWERED, NULL);
+  powermgr.add_timed_transition(&not_running, &pi_off, TIME__WAIT_BEFORE_POWER_OFF, NULL);
+
+  //state: not powered
+  powermgr.add_timed_transition(&not_powered, &pi_off, 1, NULL);
+
 }
 
 void loop()
 {
 
   // check timed transitions, execute any in-state callbacks
-  renix_fsm.run_machine();
-  opendsh_fsm.run_machine();
+  powermgr.run_machine();
 
   // if ignition is on, send trigger
   if(digitalRead(IGNITION_PIN) > 0) {
-    renix_fsm.trigger(TRIGGER__IGN_ON);
-    opendsh_fsm.trigger(TRIGGER__IGN_ON);
+    powermgr.trigger(TRIGGER__IGN_ON);
   } else {
-    renix_fsm.trigger(TRIGGER__IGN_OFF);
-    opendsh_fsm.trigger(TRIGGER__IGN_OFF);
+    powermgr.trigger(TRIGGER__IGN_OFF);
   }
-
-  // if pis are not running, send trigger
-  // if(!renix.isRunning()) {
-  //   renix_fsm.trigger(TRIGGER__NOT_RUNNING);
-  //   Serial.println("renix is not running");
-  // }
-  if(!opendsh.isRunning()) {
-      opendsh_fsm.trigger(TRIGGER__NOT_RUNNING);
-      // Serial.println("opendsh is not running");
-  } 
-
-  // if pis are powered off, send trigger
-  if(!renix.isPoweredOn()) renix_fsm.trigger(TRIGGER__NOT_POWERED);
-  if(!opendsh.isPoweredOn()) opendsh_fsm.trigger(TRIGGER__NOT_POWERED);
 
 }

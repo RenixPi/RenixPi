@@ -1,4 +1,6 @@
 #include "PiDevice.h"
+#include "pins.h"
+#include "states.h"
 
 
 
@@ -41,3 +43,8 @@ void PiDevice::shutdown() {
 String PiDevice::getName() {
     return m_name;
 }
+
+PiDevice RenixPi("renix", RENIX_PWR_PIN, RENIX_SHUTDOWN_PIN, RENIX_RUNNING_PIN, RENIX_I_PIN);
+PiDevice OpenDshPi("opendsh", OPENDSH_PWR_PIN, OPENDSH_SHUTDOWN_PIN, OPENDSH_RUNNING_PIN, OPENDSH_I_PIN);
+
+

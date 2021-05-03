@@ -15,22 +15,24 @@
 
 #include "Fsm.h"
 
-State::State(void (*on_enter)(PiDevice* device), void (*on_state)(PiDevice* device), void (*on_exit)(PiDevice* device))
+
+State::State(void (*on_enter)(), void (*on_state)(), void (*on_exit)())
 : on_enter(on_enter),
   on_state(on_state),
   on_exit(on_exit)
 {
 }
 
-Fsm::Fsm(State* initial_state, PiDevice* device)
+
+Fsm::Fsm(State* initial_state)
 : m_current_state(initial_state),
   m_transitions(NULL),
   m_num_transitions(0),
   m_num_timed_transitions(0),
-  m_initialized(false),
-  m_device(device)
+  m_initialized(false)
 {
 }
+
 
 Fsm::~Fsm()
 {
@@ -39,6 +41,7 @@ Fsm::~Fsm()
   m_transitions = NULL;
   m_timed_transitions = NULL;
 }
+
 
 void Fsm::add_transition(State* state_from, State* state_to, int event,
                          void (*on_transition)())
@@ -135,11 +138,11 @@ void Fsm::run_machine()
   {
     m_initialized = true;
     if (m_current_state->on_enter != NULL)
-      m_current_state->on_enter(m_device);
+      m_current_state->on_enter();
   }
   
   if (m_current_state->on_state != NULL)
-    m_current_state->on_state(m_device);
+    m_current_state->on_state();
     
   Fsm::check_timed_transitions();
 }
@@ -149,13 +152,13 @@ void Fsm::make_transition(Transition* transition)
  
   // Execute the handlers in the correct order.
   if (transition->state_from->on_exit != NULL)
-    transition->state_from->on_exit(m_device);
+    transition->state_from->on_exit();
 
   if (transition->on_transition != NULL)
     transition->on_transition();
 
   if (transition->state_to->on_enter != NULL)
-    transition->state_to->on_enter(m_device);
+    transition->state_to->on_enter();
   
   m_current_state = transition->state_to;
 
