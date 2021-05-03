@@ -11,29 +11,38 @@
 #define TIME__WAIT_BEFORE_POWER_OFF (30*1000)
 
 void initial__enter() {
-    Serial.println("initial state");
+  #ifdef DEBUG
+  Serial.println("initial state");
+  #endif
+  //pis should start off
+  RenixPi.disablePower();
+  OpenDshPi.disablePower();
 }
 State initial(&initial__enter, NULL, NULL);
 Fsm powermgr(&initial);
 
 void pi_off__enter() {
-  Serial.println("shutting pis off");
+  Serial.println("pis are off");
+
+  //should already be off, just in case
   RenixPi.disablePower();
   OpenDshPi.disablePower();
 }
 
 void pi_off__actions() {
-    if(digitalRead(IGNITION_PIN) > 0) {
-      powermgr.trigger(TRIGGER__IGN_ON);
-    } else {
-      powermgr.trigger(TRIGGER__IGN_OFF);
-    }
+  if(digitalRead(IGNITION_PIN) > 0) {
+    powermgr.trigger(TRIGGER__IGN_ON);
+  } else {
+    powermgr.trigger(TRIGGER__IGN_OFF);
+  }
 }
 
 void sleep__enter() {
-    Serial.println("taking a nap");
-    delay(500);
-    LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
+  #ifdef DEBUG
+  Serial.println("taking a nap");
+  #endif
+  delay(500);
+  LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
 }
 
 void pi_on__enter() {
@@ -76,6 +85,14 @@ void not_running__enter() {
 }
 
 void not_running__actions() {
+  #ifdef DEBUG
+  Serial.print("renix power: ");
+  Serial.println(analogRead(RENIX_I_PIN));
+  Serial.print("opendsh power: ");
+  Serial.println(analogRead(OPENDSH_I_PIN));
+  delay(1000);
+  #endif
+
   if(!RenixPi.isPoweredOn() && !OpenDshPi.isPoweredOn()) {
     #ifdef DEBUG
     Serial.println("both pis are powered off");
@@ -86,7 +103,15 @@ void not_running__actions() {
 
 void not_powered__enter() {
   #ifdef DEBUG
-  Serial.println("not powered");
+  Serial.println("not powered, turning power off");
+  #endif
+  RenixPi.disablePower();
+  OpenDshPi.disablePower();
+}
+
+void not_responsive() {
+  #ifdef DEBUG
+  Serial.println("not responsive, turn off");
   #endif
 }
 
@@ -134,14 +159,14 @@ void setup()
   
   //state: start shutdown
   powermgr.add_transition(&start_shutdown, &not_running, TRIGGER__NOT_RUNNING, NULL);
-  powermgr.add_timed_transition(&start_shutdown, &pi_off, TIME__WAIT_BEFORE_POWER_OFF, NULL);
+  powermgr.add_timed_transition(&start_shutdown, &pi_off, TIME__WAIT_BEFORE_POWER_OFF, &not_responsive);
   
   //state: not running
   powermgr.add_transition(&not_running, &not_powered, TRIGGER__NOT_POWERED, NULL);
-  powermgr.add_timed_transition(&not_running, &pi_off, TIME__WAIT_BEFORE_POWER_OFF, NULL);
+  powermgr.add_timed_transition(&not_running, &pi_off, TIME__WAIT_BEFORE_POWER_OFF, &not_responsive);
 
   //state: not powered
-  powermgr.add_timed_transition(&not_powered, &pi_off, 1, NULL);
+  powermgr.add_timed_transition(&not_powered, &pi_off, 500, NULL);
 
 }
 
@@ -157,5 +182,5 @@ void loop()
   } else {
     powermgr.trigger(TRIGGER__IGN_OFF);
   }
-
+  
 }

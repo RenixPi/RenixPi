@@ -6,7 +6,7 @@
 
 
 
-#define MIN_POWER_DRAW 100
+#define MIN_POWER_DRAW 200
 
 class PiDevice : public LowPowerClass {
 
