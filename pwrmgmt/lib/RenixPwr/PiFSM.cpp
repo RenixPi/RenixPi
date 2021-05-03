@@ -3,17 +3,20 @@
 #include <transitions.h>
 
 
-#define TIME__WAIT_BEFORE_SHUTDOWN (2*6*1000)
+#define TIME__WAIT_BEFORE_SHUTDOWN (6*1000)
 #define TIME__WAIT_BEFORE_POWER_OFF (30*1000)
 
 PiFSM::PiFSM(PiDevice* device)
-:   pi_off(&pi_off__enter, NULL, NULL),
+:   startup(&startup__enter, NULL, NULL),
+    pi_off(&pi_off__enter, NULL, NULL),
     pi_on(&pi_on__enter, NULL, NULL),
-    hold(NULL, NULL, NULL),
+    hold(&hold__enter, NULL, NULL),
     start_shutdown(&start_shutdown__enter, NULL, NULL),
     pi_not_running(NULL, NULL, NULL),
-    Fsm(&pi_off, device)
+    Fsm(&startup, device)
  {
+  add_timed_transition(&startup, &pi_off, 2000, NULL);
+
   add_transition(&pi_off, &pi_on, TRIGGER__IGN_ON, NULL);
 
   add_transition(&pi_on, &hold, TRIGGER__IGN_OFF, NULL);

@@ -1,11 +1,12 @@
 
 #include <PinChangeInt.h>
+#define DEBUG
 
 #include <PiDevice.h>
 #include <PiFSM.h>
 #include <triggers.h>
 
-#define IGNITION_PIN 15
+#define IGNITION_PIN 8
 
 PiDevice renix("renix", RENIX_PWR_PIN, RENIX_SHUTDOWN_PIN, RENIX_RUNNING_PIN, RENIX_I_PIN);
 PiDevice opendsh("opendsh", OPENDSH_PWR_PIN, OPENDSH_SHUTDOWN_PIN, OPENDSH_RUNNING_PIN, OPENDSH_I_PIN);
@@ -22,6 +23,7 @@ void on_wakeup() {
 void setup()
 {
   Serial.begin(9600);
+  Serial.println("starting...");
 
   // use the ignition power to wake up the sleepypi
   pinMode(IGNITION_PIN, INPUT);
@@ -39,11 +41,20 @@ void loop()
   if(digitalRead(IGNITION_PIN) > 0) {
     renix_fsm.trigger(TRIGGER__IGN_ON);
     opendsh_fsm.trigger(TRIGGER__IGN_ON);
+  } else {
+    renix_fsm.trigger(TRIGGER__IGN_OFF);
+    opendsh_fsm.trigger(TRIGGER__IGN_OFF);
   }
 
   // if pis are not running, send trigger
-  if(!renix.isRunning()) renix_fsm.trigger(TRIGGER__NOT_RUNNING);
-  if(!opendsh.isRunning()) opendsh_fsm.trigger(TRIGGER__NOT_RUNNING);
+  // if(!renix.isRunning()) {
+  //   renix_fsm.trigger(TRIGGER__NOT_RUNNING);
+  //   Serial.println("renix is not running");
+  // }
+  if(!opendsh.isRunning()) {
+      opendsh_fsm.trigger(TRIGGER__NOT_RUNNING);
+      // Serial.println("opendsh is not running");
+  } 
 
   // if pis are powered off, send trigger
   if(!renix.isPoweredOn()) renix_fsm.trigger(TRIGGER__NOT_POWERED);

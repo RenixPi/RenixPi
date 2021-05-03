@@ -8,6 +8,7 @@ class PiFSM : public Fsm {
     public: 
         PiFSM(PiDevice* device);
 
+        State startup;
         State pi_off;
         State pi_on;
         State hold;
