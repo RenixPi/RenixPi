@@ -5,8 +5,8 @@
 #include <Fsm.h>
 
 
-
-#define MIN_POWER_DRAW 200
+// in mA
+#define MIN_POWER_DRAW 300
 
 class PiDevice : public LowPowerClass {
 
@@ -20,6 +20,8 @@ class PiDevice : public LowPowerClass {
         void shutdown();
 
         String getName();
+
+        float getCurrentDraw();
 
     private:
         String m_name;

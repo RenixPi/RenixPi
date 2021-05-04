@@ -6,6 +6,7 @@
 #include <states.h>
 #include <transitions.h>
 #include <triggers.h>
+#include <SleepyPi2.h>
 
 #define TIME__WAIT_BEFORE_SHUTDOWN (6*1000)
 #define TIME__WAIT_BEFORE_POWER_OFF (30*1000)
@@ -40,6 +41,10 @@ void pi_off__actions() {
 void sleep__enter() {
   #ifdef DEBUG
   Serial.println("taking a nap");
+  Serial.println(SleepyPi.supplyVoltage());
+  Serial.println(SleepyPi.rpiCurrent());
+  Serial.println(RenixPi.getCurrentDraw());
+  Serial.println(OpenDshPi.getCurrentDraw());
   #endif
   delay(500);
   LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
@@ -57,6 +62,9 @@ void pi_on__enter() {
 void hold__enter() {
     #ifdef DEBUG
     Serial.println("entering hold ");
+    Serial.print(RenixPi.getCurrentDraw());
+    Serial.print("\t\t");
+    Serial.println(OpenDshPi.getCurrentDraw());
     #endif
 }
 
@@ -86,11 +94,11 @@ void not_running__enter() {
 
 void not_running__actions() {
   #ifdef DEBUG
-  Serial.print("renix power: ");
-  Serial.println(analogRead(RENIX_I_PIN));
-  Serial.print("opendsh power: ");
-  Serial.println(analogRead(OPENDSH_I_PIN));
-  delay(1000);
+  Serial.println("not running");
+    Serial.print(RenixPi.getCurrentDraw());
+    Serial.print("\t\t");
+    Serial.println(OpenDshPi.getCurrentDraw());
+    delay(500);
   #endif
 
   if(!RenixPi.isPoweredOn() && !OpenDshPi.isPoweredOn()) {
@@ -182,5 +190,5 @@ void loop()
   } else {
     powermgr.trigger(TRIGGER__IGN_OFF);
   }
-  
+
 }

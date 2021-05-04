@@ -33,7 +33,18 @@ bool PiDevice::isRunning() {
 }
 
 bool PiDevice::isPoweredOn() {
-    return analogRead(m_current_draw_pin) > MIN_POWER_DRAW;
+
+     return getCurrentDraw() > MIN_POWER_DRAW;
+}
+
+float PiDevice::getCurrentDraw() {
+    float i;
+    
+    // 10-bit ADC resolution = 3.3 / 1024 = 3.22mV
+    i = 3.22 * (float)analogRead(m_current_draw_pin);
+
+    return i;
+
 }
 
 void PiDevice::shutdown() {
