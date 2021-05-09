@@ -33,14 +33,13 @@
       loop:
         - "RenixPi/RenixAnalytics"
         - "OpenDsh/dash"
-      become: yes
-    - name: install RenixAnalytics dependencies
-      npm:
-        path: /home/pi/RenixAnalytics
-    - name: run opendash install
-      ansible.builtin.shell:
-        cmd: "install.sh"
-        chdir: "~/dash"
+#    - name: install RenixAnalytics dependencies
+#      npm:
+#        path: /home/pi/RenixAnalytics
+#    - name: run opendash install
+#      ansible.builtin.shell:
+#        cmd: "install.sh"
+#        chdir: "~/dash"
 
 
 # screen resolution
