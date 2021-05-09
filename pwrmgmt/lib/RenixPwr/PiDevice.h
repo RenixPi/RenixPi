@@ -3,6 +3,7 @@
 
 #include <LowPower.h>
 #include <Fsm.h>
+#include <Adafruit_INA260.h>
 
 
 // in mA
@@ -29,6 +30,7 @@ class PiDevice : public LowPowerClass {
         int m_shutdown_pin;
         int m_running_pin;
         int m_current_draw_pin;
+        Adafruit_INA260 m_ina260;
 };
 
 

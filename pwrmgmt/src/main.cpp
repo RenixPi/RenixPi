@@ -7,12 +7,11 @@
 #include <transitions.h>
 #include <triggers.h>
 #include <SleepyPi2.h>
-#include <Adafruit_INA260.h>
 
-#define TIME__WAIT_BEFORE_SHUTDOWN (6*1000)
+#define TIME__WAIT_BEFORE_SHUTDOWN (2*60*1000)
 #define TIME__WAIT_BEFORE_POWER_OFF (30*1000)
 
-Adafruit_INA260 ina260 = Adafruit_INA260();
+// Adafruit_INA260 ina260 = Adafruit_INA260();
 
 void initial__enter() {
   #ifdef DEBUG
@@ -60,12 +59,6 @@ void pi_on__enter() {
     #ifdef DEBUG
     Serial.println("turning on");
     #endif
-    delay(100);
-    if (!ina260.begin()) {
-      Serial.println("Couldn't find INA260 chip");
-    } else {
-      Serial.println("Found INA260 chip");
-    }
 }
 
 void hold__enter() {
@@ -135,7 +128,7 @@ void not_responsive() {
 void on_wakeup() {
     // when sleepypi wakes from its nap
     #ifdef DEBUG
-    // Serial.println("waking up");
+    Serial.println("waking up");
     #endif
 }
 

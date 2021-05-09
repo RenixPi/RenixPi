@@ -9,12 +9,15 @@ m_name(name),
 m_pwr_pin(pwr_pin),
 m_shutdown_pin(shutdown_pin),
 m_running_pin(running_pin),
-m_current_draw_pin(current_draw_pin)
+m_current_draw_pin(current_draw_pin),
+m_ina260(Adafruit_INA260())
 {
     pinMode(m_pwr_pin, OUTPUT);
     pinMode(m_shutdown_pin, OUTPUT);
     pinMode(m_running_pin, INPUT);
-    pinMode(m_current_draw_pin, INPUT);
+    if(m_current_draw_pin > 0) {
+        pinMode(m_current_draw_pin, INPUT);
+    }
 
     disablePower();
 }
@@ -40,8 +43,13 @@ bool PiDevice::isPoweredOn() {
 float PiDevice::getCurrentDraw() {
     float i;
     
-    // 10-bit ADC resolution = 3.3 / 1024 = 3.22mV
-    i = 3.22 * (float)analogRead(m_current_draw_pin);
+    if(m_current_draw_pin > 0) {
+        // 10-bit ADC resolution = 3.3 / 1024 = 3.22mV
+        i = 3.22 * (float)analogRead(m_current_draw_pin);
+    } else {
+        m_ina260.begin();
+        i = m_ina260.readCurrent();
+    }
 
     return i;
 
