@@ -7,9 +7,12 @@
 #include <transitions.h>
 #include <triggers.h>
 #include <SleepyPi2.h>
+#include <Adafruit_INA260.h>
 
 #define TIME__WAIT_BEFORE_SHUTDOWN (6*1000)
 #define TIME__WAIT_BEFORE_POWER_OFF (30*1000)
+
+Adafruit_INA260 ina260 = Adafruit_INA260();
 
 void initial__enter() {
   #ifdef DEBUG
@@ -41,10 +44,10 @@ void pi_off__actions() {
 void sleep__enter() {
   #ifdef DEBUG
   Serial.println("taking a nap");
-  Serial.println(SleepyPi.supplyVoltage());
-  Serial.println(SleepyPi.rpiCurrent());
-  Serial.println(RenixPi.getCurrentDraw());
-  Serial.println(OpenDshPi.getCurrentDraw());
+  // Serial.println(SleepyPi.supplyVoltage());
+  // Serial.println(SleepyPi.rpiCurrent());
+  // Serial.println(RenixPi.getCurrentDraw());
+  // Serial.println(OpenDshPi.getCurrentDraw());
   #endif
   delay(500);
   LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
@@ -57,6 +60,12 @@ void pi_on__enter() {
     #ifdef DEBUG
     Serial.println("turning on");
     #endif
+    delay(100);
+    if (!ina260.begin()) {
+      Serial.println("Couldn't find INA260 chip");
+    } else {
+      Serial.println("Found INA260 chip");
+    }
 }
 
 void hold__enter() {
@@ -94,11 +103,11 @@ void not_running__enter() {
 
 void not_running__actions() {
   #ifdef DEBUG
-  Serial.println("not running");
-    Serial.print(RenixPi.getCurrentDraw());
-    Serial.print("\t\t");
-    Serial.println(OpenDshPi.getCurrentDraw());
-    delay(500);
+    // Serial.println("not running");
+    // Serial.print(RenixPi.getCurrentDraw());
+    // Serial.print("\t\t");
+    // Serial.println(OpenDshPi.getCurrentDraw());
+    // delay(500);
   #endif
 
   if(!RenixPi.isPoweredOn() && !OpenDshPi.isPoweredOn()) {
@@ -126,7 +135,7 @@ void not_responsive() {
 void on_wakeup() {
     // when sleepypi wakes from its nap
     #ifdef DEBUG
-    Serial.println("waking up");
+    // Serial.println("waking up");
     #endif
 }
 
@@ -137,6 +146,8 @@ State hold(&hold__enter, NULL, NULL);
 State start_shutdown(&start_shutdown__enter, &start_shutdown__actions, NULL);
 State not_running(&not_running__enter, &not_running__actions, NULL);
 State not_powered(&not_powered__enter, NULL, NULL);
+
+
 
 // initial configuration
 void setup()
@@ -191,4 +202,9 @@ void loop()
     powermgr.trigger(TRIGGER__IGN_OFF);
   }
 
+  if(OpenDshPi.isRunning()) {
+    Serial.println("opendsh now running");
+  }
+
+  delay(1000);
 }
