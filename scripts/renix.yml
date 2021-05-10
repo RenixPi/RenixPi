@@ -47,7 +47,7 @@
         owner: pi
         group: pi
         mode: '0500'
-      loop:
+      loop:=00p=
         - "prometheus"
         - "promtool"
       become: yes

@@ -195,9 +195,5 @@ void loop()
     powermgr.trigger(TRIGGER__IGN_OFF);
   }
 
-  if(OpenDshPi.isRunning()) {
-    Serial.println("opendsh now running");
-  }
-
   delay(1000);
 }
