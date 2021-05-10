@@ -8,8 +8,8 @@
 #include <triggers.h>
 #include <SleepyPi2.h>
 
-#define TIME__WAIT_BEFORE_SHUTDOWN (2*60*1000)
-#define TIME__WAIT_BEFORE_POWER_OFF (30*1000)
+unsigned long TIME__WAIT_BEFORE_SHUTDOWN = (unsigned long)2*60*1000;
+unsigned long TIME__WAIT_BEFORE_POWER_OFF = (unsigned long)30*1000;
 
 // Adafruit_INA260 ina260 = Adafruit_INA260();
 
