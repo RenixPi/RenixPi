@@ -96,11 +96,11 @@ void not_running__enter() {
 
 void not_running__actions() {
   #ifdef DEBUG
-    // Serial.println("not running");
-    // Serial.print(RenixPi.getCurrentDraw());
-    // Serial.print("\t\t");
-    // Serial.println(OpenDshPi.getCurrentDraw());
-    // delay(500);
+    Serial.println("not running");
+    Serial.print(RenixPi.getCurrentDraw());
+    Serial.print("\t\t");
+    Serial.println(OpenDshPi.getCurrentDraw());
+    delay(500);
   #endif
 
   if(!RenixPi.isPoweredOn() && !OpenDshPi.isPoweredOn()) {
