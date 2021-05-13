@@ -144,6 +144,22 @@
       loop:
         - { 'src': 'renixmonitor.service.j2', 'dest': '/etc/systemd/system/renixmonitor.service' }
         - { 'src': 'tpmsmonitor.service.j2', 'dest': '/etc/systemd/system/tpmsmonitor.service' }
+    - name: ap dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - hostap
+        - dnsmasq
+    - name: enable ap
+      systemd:
+        state: started
+        enable: yes
+        name: hostapd
+
+# https://www.raspberrypi.org/documentation/configuration/wireless/access-point-routed.md
+
+
 #    - name: start monitoring services
 #      systemd:
 #        state: started
