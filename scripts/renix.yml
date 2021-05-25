@@ -47,7 +47,7 @@
         owner: pi
         group: pi
         mode: '0500'
-      loop:=00p=
+      loop:
         - "prometheus"
         - "promtool"
       become: yes
@@ -142,8 +142,8 @@
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
       loop:
-        - { 'src': 'renixmonitor.service.j2', 'dest': '/etc/systemd/system/renixmonitor.service' }
-        - { 'src': 'tpmsmonitor.service.j2', 'dest': '/etc/systemd/system/tpmsmonitor.service' }
+        - { 'src': 'renixmon.service.j2', 'dest': '/etc/systemd/system/renixmon.service' }
+        - { 'src': 'tpmsmon.service.j2', 'dest': '/etc/systemd/system/tpmsmon.service' }
     - name: ap dependencies
       apt:
         name: "{{ item }}"

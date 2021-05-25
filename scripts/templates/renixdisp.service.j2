@@ -1,8 +1,10 @@
 [Unit]
-Description=ECU Monitor
+Description=Renix Display
 After=network.target
 
 [Service]
+Environment=DISPLAY=:0
+Environment=RENIXCFG=/etc/renix.toml
 ExecStart=/home/pi/RenixDisplay/builds/renixdisplay-linux-armv7l/renixdisplay
 WorkingDirectory=/home/pi/RenixDisplay
 StandardOutput=inherit
