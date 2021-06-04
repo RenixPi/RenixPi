@@ -8,8 +8,8 @@
 #include <triggers.h>
 #include <SleepyPi2.h>
 
-#define TIME__WAIT_BEFORE_SHUTDOWN (2*60*1000)
-#define TIME__WAIT_BEFORE_POWER_OFF (30*1000)
+unsigned long TIME__WAIT_BEFORE_SHUTDOWN = (unsigned long)2*60*1000;
+unsigned long TIME__WAIT_BEFORE_POWER_OFF = (unsigned long)30*1000;
 
 // Adafruit_INA260 ina260 = Adafruit_INA260();
 
@@ -96,11 +96,11 @@ void not_running__enter() {
 
 void not_running__actions() {
   #ifdef DEBUG
-    // Serial.println("not running");
-    // Serial.print(RenixPi.getCurrentDraw());
-    // Serial.print("\t\t");
-    // Serial.println(OpenDshPi.getCurrentDraw());
-    // delay(500);
+    Serial.println("not running");
+    Serial.print(RenixPi.getCurrentDraw());
+    Serial.print("\t\t");
+    Serial.println(OpenDshPi.getCurrentDraw());
+    delay(500);
   #endif
 
   if(!RenixPi.isPoweredOn() && !OpenDshPi.isPoweredOn()) {
@@ -193,10 +193,6 @@ void loop()
     powermgr.trigger(TRIGGER__IGN_ON);
   } else {
     powermgr.trigger(TRIGGER__IGN_OFF);
-  }
-
-  if(OpenDshPi.isRunning()) {
-    Serial.println("opendsh now running");
   }
 
   delay(1000);

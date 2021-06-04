@@ -50,6 +50,33 @@
   lineinfile:
     path: "/home/pi/.bashrc"
     line: "export DISPLAY=:0"
+- name: create shutdown check script
+  copy:
+    src: "shutdowncheck.py"
+    dest: "/home/pi/bin/shutdowncheck.py"
+    mode: '0777'
+- name: create build dir
+  file:
+    path: "/home/pi/bin"
+    state: directory
+- name: shutdowncheck service
+  template:
+    src: "shutdowncheck.service.j2"
+    dest: "/etc/systemd/system/shutdowncheck.service"
+  become: yes
+- name: renix toml
+  template:
+    src: "renix.toml.j2"
+    dest: "/etc/renix.toml"
+  become: yes
+
+#- name: start monitoring services
+#  systemd:
+#    state: started
+#    enabled: yes
+#    daemon_reload: yes
+#    name: "shutdowncheck"
+#  become: yes
 
 
 # screen config -> /usr/share/dispsetup.sh

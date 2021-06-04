@@ -1,0 +1,17 @@
+[Unit]
+Description=Renix Display
+After=network.target
+
+[Service]
+Environment=DISPLAY=:0
+Environment=RENIXCFG=/etc/renix.toml
+ExecStart=/home/pi/RenixDisplay/builds/renixdisplay-linux-armv7l/renixdisplay
+WorkingDirectory=/home/pi/RenixDisplay
+StandardOutput=inherit
+StandardError=inherit
+Restart=on-failure
+RestartSec=5s
+User=pi
+
+[Install]
+WantedBy=multi-user.target
