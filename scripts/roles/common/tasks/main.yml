@@ -46,6 +46,7 @@
     - 'start_cd=1'
     - '#dtoverlay=sdtweak,overclock_50=10'
   become: yes
+
 - name: set DISPLAY
   lineinfile:
     path: "/home/pi/.bashrc"

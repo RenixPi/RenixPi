@@ -35,6 +35,20 @@
       loop:
         - "RenixPi/RenixAnalytics"
         - "OpenDsh/dash"
+        - "RenixPi/RenixRadio"
+    - name: disable screensaver, energysaver and mouse pointer
+      lineinfile:
+        path: "/etc/xdg/lxsession/LXDE-pi/autostart"
+        line: "{{ item }}"
+      loop:
+        - '@xrandr --output HDMI-1 --mode 1280x720'
+    - name: boot changes
+      lineinfile:
+        path: "/boot/config.txt"
+        line: "{{ item }}"
+      loop:
+        - 'disable_overscan=1'
+
 #    - name: install RenixAnalytics dependencies
 #      npm:
 #        path: /home/pi/RenixAnalytics
@@ -43,9 +57,20 @@
 #        cmd: "install.sh"
 #        chdir: "~/dash"
 
+# add to bashrc
+# export XDG_RUNTIME_DIR=/run/user/$(id -u pi)
+# sudo loginctl enable-linger pi
+# systemctl --user daemon-reload
+# systemctl --user enable renixradio
+# systemctl --user start renixradio
+
+# install renixradio dependencies
+# sudo apt-get install libatlas-base-dev
+# install
 
 # screen resolution
 # cvt 1024 600 60
 # xrandr --newmode <line from above>
 # xrandr --addmode HDMI-n <mode from above>
 # xrandr -s 1680x1050
+# xrandr --output VGA1 --mode "1920x1080_60.00"
