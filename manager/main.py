@@ -1,34 +1,32 @@
-# from machine import Pin
-# import pycom
-# from machine import I2C
-# from time import sleep
+import pycom
+from machine import I2C
 
-# from ina260 import INA260
+import pins
+import address
+from raspberrypi import RaspberryPi
+
 # from ds3231 import DS3231
 
-# pwr = Pin('P23', mode=Pin.OUT)
-# pycom.heartbeat(False)
-# pycom.rgbled(0xFF0000)  # Red
+
+pycom.heartbeat(False)
+pycom.rgbled(0xFF0000)  # Red
+
+i2c = I2C(0, I2C.MASTER, baudrate=100000)
+
+rnx_pi = RaspberryPi(pins.RNX_ENBL, pins.RNX_SDN, pins.RNX_RUN, address.RNX_CM, i2c)
+odsh_pi = RaspberryPi(pins.ODSH_ENBL, pins.ODSH_SDN, pins.ODSH_RUN, address.ODSH_CM, i2c)
 
 
 
-# i2c = I2C(0, I2C.MASTER, baudrate=100000)
+
+
 
 # ina = INA260(64, i2c)
 # ds = DS3231(104, i2c)
 
-# # devices = i2c.scan()
+# from fsm import power_mgr
 
-# # for device in devices:
-# #     print(device)
-
-# pwr.value(1)
-# sleep(0.5)
-# # mfg_id = i2c.readfrom_mem(64, _REG_MFG_UID, 2)
-
-from fsm import power_mgr
-
-power_mgr.initialize()
+# power_mgr.initialize()
 
 
 
