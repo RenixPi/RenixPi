@@ -21,9 +21,41 @@ from pysm import StateMachine, State, Event
 #             'event2': self.on_event2
 #         }
 
-class InitialPowerUp(State):
+class OnEnterState(State):
+
+    def register_handlers(self):
+        self.handlers = {
+            'enter': self.on_enter
+        }
+
+
+
+class PiOff(OnEnterState):
     def on_enter(self, state, event):
         print("make sure power to pis is off")
+    
+class Sleep(OnEnterState):
+    def on_enter(self, state, event):
+        print("go into deep sleep")
 
+class PiOn(OnEnterState):
+    def on_enter(self, state, event):
+        print("power it up!")
+    
 
+class Hold(OnEnterState):
+    def on_enter(self):
+        print("ignition off, waiting on decision to shutdown")
+
+class StartShutdown(OnEnterState):
+    def on_enter(self):
+        print("send signal to PIs for shutdown")
+
+class WaitForShutdown(OnEnterState):
+    def on_enter(self):
+        print("waiting for PIs to shutdown")
+
+class ShutdownConfirmed(OnEnterState):
+    def on_enter(self):
+        print("PIs no longer consuming power")
 
